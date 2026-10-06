@@ -253,7 +253,7 @@ summary{padding:10px 0;cursor:pointer}
   .dlg{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:420px){.opts.two{grid-template-columns:1fr}.xp{padding-left:8px}.kv b{font-size:24px}
-  .pinned{padding:2px 14px 6px}.pinned .cl{padding:8px 0}.pinned .cl .cr{font-size:17.5px}.pinned .cl .board p{font-size:19px}}
+  .pinned{padding:2px 14px 6px}.pinned .cl{padding:8px 0}.pinned .cl .cr{font-size:17.5px}.pinned .cl .board p{font-size:19px}.pinned .cl .board.cn p{font-size:15.5px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -275,8 +275,8 @@ const CONFIG = {
   TEACHER_PIN: "2580"
 };
 /* ======================================================= */
-const SITE = "Grammar Training", BUILD = "2026-10-06b";
-const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":false},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":false},{"id":"qn","name":"Questions and word order","on":false},{"id":"if","name":"If-clauses","on":false},{"id":"aa","name":"Adjective or adverb","on":false},{"id":"ar","name":"Articles and quantifiers","on":false},{"id":"pv","name":"Passive","on":false},{"id":"de","name":"German mistakes","on":false},{"id":"rc","name":"Relative clauses","on":false},{"id":"ca","name":"Capitals and apostrophes","on":false},{"id":"rs","name":"Reported speech","on":false},{"id":"rg","name":"Formal or informal","on":false}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
+const SITE = "Grammar Training", BUILD = "2026-10-06c";
+const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":false},{"id":"qn","name":"Questions and word order","on":false},{"id":"if","name":"If-clauses","on":false},{"id":"aa","name":"Adjective or adverb","on":false},{"id":"ar","name":"Articles and quantifiers","on":false},{"id":"pv","name":"Passive","on":false},{"id":"de","name":"German mistakes","on":false},{"id":"rc","name":"Relative clauses","on":false},{"id":"ca","name":"Capitals and apostrophes","on":false},{"id":"rs","name":"Reported speech","on":false},{"id":"rg","name":"Formal or informal","on":false}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
 
 /* ===== FIGUREN START (Quelle: figuren.js) ===== */
 /* Doggo und Dogga, Platzhalter (Version 1 "Sticker"). Stand 4. Oktober 2026.
@@ -326,9 +326,23 @@ function gogglesParts(g){
     `<path d="M112 37L124 35" fill="none" stroke="${INK}" stroke-width="12"/><path d="M112 37L124 35" fill="none" stroke="${m}" stroke-width="4"/>`+
     lens(97,39)+lens(139,34);
 }
+/* Baustein pa: Wikingerhelm (Vergangenheit). Platzhalter, bis Pauls Bilder eingebaut sind (dort Kostüm 18 „Wikinger“). */
+function vikingParts(g){
+  const m=g?'#F2B705':'#B7C0CF',d=g?'#C98F00':'#7E8798',l=g?'#FFE27A':'#E9EEF5',hn=g?'#FFF7D6':'#F3E7C9',hs=g?'#E8C766':'#D3BE8E';
+  const dome='M64 64C62 28 88 4 118 1C148 -2 174 18 176 52Z';
+  const hL='M76 44C56 42 38 24 38 -4C38 -13 46 -14 48 -7C53 12 66 22 86 26Z';
+  const hR='M166 32C186 28 202 8 200 -20C200 -29 192 -30 190 -23C186 -4 176 8 156 14Z';
+  const band='M60 66C94 57 142 51 180 51';
+  const rivet=(x,y)=>`<circle cx="${x}" cy="${y}" r="3.400" fill="${l}" stroke="${INK}" stroke-width="2.500"/>`;
+  return fF(hL,hn)+fL('M50 6C56 20 66 30 80 36',hs,5)+fO(hL)+fF(hR,hn)+fL('M190 -8C186 8 176 18 162 24',hs,5)+fO(hR)+
+    fF(dome,m)+fL('M84 30C92 16 104 9 118 7',l,7)+fL('M119 3C120 22 120 40 119 57',d,5)+fO(dome)+
+    `<path d="${band}" fill="none" stroke="${INK}" stroke-width="17"/><path d="${band}" fill="none" stroke="${d}" stroke-width="8"/>`+
+    rivet(78,62)+rivet(99,57.500)+rivet(120,54.500)+rivet(141,52.500)+rivet(162,51.500);
+}
 /* Ein Eintrag pro Baustein: Name, Name der Gold-Variante, Doggos Spruch beim Freischalten, Ebene */
 const COSTUMES={
   pr:{name:'Lab goggles',gold:'Gold lab goggles',say:'Facts take the simple present, so here is one: these goggles really suit me.',parts:gogglesParts},
+  pa:{name:'Viking helmet',gold:'Gold Viking helmet',say:'This helmet comes straight from the past, and it fits surprisingly well.',parts:vikingParts},
   pp:{name:'Present bow',gold:'Gold bow',say:'A present bow for the present perfect. I didn\u2019t choose the pun, but I do like the bow.',parts:bowParts},
   if:{name:'Wizard hat',gold:'Gold wizard hat',say:'If I were a wizard, I would wear this. So I do.',parts:wizardParts}
 };
@@ -443,6 +457,14 @@ function dl(a,b){ // Damerau-Levenshtein (optimal string alignment)
 // 'ok' richtig, 'typo' ein Tippfehler in einem langen Wort oder ein fehlender Apostroph (dont), 'no' falsch.
 // Ein fehlendes oder überzähliges -s oder -es am Wortende ist nie ein Tippfehler (forget statt forgets, watchs statt watches): Das ist Grammatik.
 function sEnd(x,y){return x+'s'===y||y+'s'===x||x.replace(/s$/,'es')===y||y.replace(/s$/,'es')===x;}
+// Schreibung vor -ed ist Regel und nie ein Tippfehler: Verdopplung (stoped/stopped), y oder i (studyed/studied), e zu viel (arriveed/arrived)
+function edEnd(x,y){
+  if(!/ed$/.test(x)||!/ed$/.test(y))return false;
+  let s=x.slice(0,-2),l=y.slice(0,-2); if(s.length>l.length){const t=s;s=l;l=t;}
+  if(l.length===s.length)return s.slice(0,-1)===l.slice(0,-1)&&/^[yi]$/.test(s.slice(-1))&&/^[yi]$/.test(l.slice(-1));
+  if(l.length===s.length+1&&l.slice(0,-1)===s){const c=l.slice(-1);return c===s.slice(-1)||c==='e';}
+  return false;
+}
 function judge(input,accepted){
   const n=norm(input); if(!n)return 'no';
   const acc=accepted.map(norm);
@@ -452,7 +474,7 @@ function judge(input,accepted){
   for(const a of acc){
     const aw=a.split(' '); if(aw.length!==w.length)continue;
     const diff=[]; for(let i=0;i<w.length;i++)if(w[i]!==aw[i])diff.push(i);
-    if(diff.length===1){const i=diff[0]; if(Math.min(w[i].length,aw[i].length)>=6&&dl(w[i],aw[i])===1&&!sEnd(w[i],aw[i]))return 'typo';}
+    if(diff.length===1){const i=diff[0]; if(Math.min(w[i].length,aw[i].length)>=6&&dl(w[i],aw[i])===1&&!sEnd(w[i],aw[i])&&!edEnd(w[i],aw[i]))return 'typo';}
   }
   return 'no';
 }
