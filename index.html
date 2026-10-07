@@ -275,8 +275,8 @@ const CONFIG = {
   TEACHER_PIN: "2580"
 };
 /* ======================================================= */
-const SITE = "Grammar Training", BUILD = "2026-10-06e";
-const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":false},{"id":"ar","name":"Articles and quantifiers","on":false},{"id":"pv","name":"Passive","on":false},{"id":"de","name":"German mistakes","on":false},{"id":"rc","name":"Relative clauses","on":false},{"id":"ca","name":"Capitals and apostrophes","on":false},{"id":"rs","name":"Reported speech","on":false},{"id":"rg","name":"Formal or informal","on":false}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
+const SITE = "Grammar Training", BUILD = "2026-10-07a";
+const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":true},{"id":"ar","name":"Articles and quantifiers","on":true},{"id":"pv","name":"Passive","on":true},{"id":"de","name":"German mistakes","on":true},{"id":"rc","name":"Relative clauses","on":false},{"id":"ca","name":"Capitals and apostrophes","on":false},{"id":"rs","name":"Reported speech","on":false},{"id":"rg","name":"Formal or informal","on":false}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
 
 /* ===== FIGUREN START (Quelle: figuren.js) ===== */
 /* Doggo und Dogga, Platzhalter (Version 1 "Sticker"). Stand 4. Oktober 2026.
@@ -458,13 +458,17 @@ function dl(a,b){ // Damerau-Levenshtein (optimal string alignment)
 // Ein fehlendes oder überzähliges -s oder -es am Wortende ist nie ein Tippfehler (forget statt forgets, watchs statt watches): Das ist Grammatik.
 function sEnd(x,y){return x+'s'===y||y+'s'===x||x.replace(/s$/,'es')===y||y.replace(/s$/,'es')===x;}
 // Schreibung vor -ed ist Regel und nie ein Tippfehler: Verdopplung (stoped/stopped), y oder i (studyed/studied), e zu viel (arriveed/arrived)
-function edEnd(x,y){
-  if(!/ed$/.test(x)||!/ed$/.test(y))return false;
-  let s=x.slice(0,-2),l=y.slice(0,-2); if(s.length>l.length){const t=s;s=l;l=t;}
+function stemEnd(x,y,suf){
+  const n=suf.length; if(x.slice(-n)!==suf||y.slice(-n)!==suf)return false;
+  let s=x.slice(0,-n),l=y.slice(0,-n); if(s.length>l.length){const t=s;s=l;l=t;}
   if(l.length===s.length)return s.slice(0,-1)===l.slice(0,-1)&&/^[yi]$/.test(s.slice(-1))&&/^[yi]$/.test(l.slice(-1));
   if(l.length===s.length+1&&l.slice(0,-1)===s){const c=l.slice(-1);return c===s.slice(-1)||c==='e';}
   return false;
 }
+function edEnd(x,y){return stemEnd(x,y,'ed');}
+// Seit Baustein aa gilt dasselbe vor -ly, -er und -est: happyly/happily, easyer/easier, bigest/biggest, niceest/nicest sind Regel-Fehler, keine Tippfehler.
+// Ebenso das Adjektiv auf -le statt des Adverbs auf -ly (terrible/terribly): Das ist der Kernfehler des Bausteins, nur ein Buchstabe Unterschied.
+function sufEnd(x,y){return stemEnd(x,y,'ly')||stemEnd(x,y,'er')||stemEnd(x,y,'est')||(x.slice(0,-1)===y.slice(0,-1)&&/^l[ey]$/.test(x.slice(-2))&&/^l[ey]$/.test(y.slice(-2)));}
 function judge(input,accepted){
   const n=norm(input); if(!n)return 'no';
   const acc=accepted.map(norm);
@@ -474,7 +478,7 @@ function judge(input,accepted){
   for(const a of acc){
     const aw=a.split(' '); if(aw.length!==w.length)continue;
     const diff=[]; for(let i=0;i<w.length;i++)if(w[i]!==aw[i])diff.push(i);
-    if(diff.length===1){const i=diff[0]; if(Math.min(w[i].length,aw[i].length)>=6&&dl(w[i],aw[i])===1&&!sEnd(w[i],aw[i])&&!edEnd(w[i],aw[i]))return 'typo';}
+    if(diff.length===1){const i=diff[0]; if(Math.min(w[i].length,aw[i].length)>=6&&dl(w[i],aw[i])===1&&!sEnd(w[i],aw[i])&&!edEnd(w[i],aw[i])&&!sufEnd(w[i],aw[i]))return 'typo';}
   }
   return 'no';
 }
