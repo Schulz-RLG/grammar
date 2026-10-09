@@ -9,7 +9,8 @@
 <meta name="color-scheme" content="light dark">
 <meta name="robots" content="noindex">
 <title>Grammar Training</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23FAFBFC'/%3E%3Crect x='5' y='17' width='22' height='8' fill='%23FFE45C'/%3E%3Cpath d='M7 16l6 8L26 6' fill='none' stroke='%23CF2F27' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <style>
 :root{
   --bg:#ECEFF2;--sf:#FAFBFC;--ink:#1A1D25;--mut:#5A616E;--ln:#CBD1DA;--pri:#2A4BC0;--acc:#FFE45C;--onacc:#1A1D25;--red:#CF2F27;--gold:#B88400;--gapbg:#FFE45C;--r:3px;
@@ -28,7 +29,13 @@ button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:3px solid var(--pri);outline-offset:2px}
 h1,h2,h3,p{margin:0}
-.dg{display:block;width:100%;height:auto}
+/* Figuren (Pauls Bilder): feste Höhe pro Stelle, Figur unten mittig, weißer Rand wie ein Sticker. Gold: goldener Rand. */
+.dg{display:block;width:100%;height:auto;object-fit:contain;object-position:50% 100%;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)}
+.dg.gold{filter:drop-shadow(3px 0 0 #E2A600) drop-shadow(-3px 0 0 #E2A600) drop-shadow(0 3px 0 #E2A600) drop-shadow(0 -3px 0 #E2A600)}
+.rw .mini .dg,.wear .dg{filter:drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)}
+.rw .mini .dg.gold,.wear .dg.gold{filter:drop-shadow(2px 0 0 #E2A600) drop-shadow(-2px 0 0 #E2A600) drop-shadow(0 2px 0 #E2A600) drop-shadow(0 -2px 0 #E2A600)}
+.hero .dg{height:150px}.coach .dg{height:106px}.rw .mini .dg{height:56px}.fb .dgw .dg{height:76px}.dlg-fig .dg{height:107px}.won .dg{height:132px}.wear .dg{height:58px;width:50px}
 .wrap{max-width:660px;margin:0 auto;padding:18px 18px 56px}
 body[data-view="teacher"] .wrap{max-width:1000px}
 .mute{color:var(--mut)}
@@ -66,6 +73,8 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .wear{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--mut);margin:14px 0 4px}
 .wear button{min-height:40px;padding:0 14px;border:1px solid var(--ln);background:transparent;border-radius:var(--r);font-weight:600;color:var(--ink)}
 .wear button[aria-pressed="true"]{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.wear button.wb{padding:5px 6px;min-height:70px}
+.wear .wn{flex-basis:100%;font-weight:600;color:var(--ink)}
 .trail{margin-top:30px}
 .idx{list-style:none;margin:10px 0 0;padding:0;position:relative}
 .idx::before{content:"";position:absolute;left:18px;top:30px;bottom:30px;border-left:1.6px solid var(--ln)}   /* die Linie des Pfads */
@@ -247,6 +256,7 @@ summary{padding:10px 0;cursor:pointer}
   .board p{font-size:32px}
   .dlg-in{padding:26px 22px 10px}
   .dlg-fig{width:136px;left:10px;margin-bottom:-13px}
+  .hero .dg{height:230px}.dlg-fig .dg{height:151px}
   .dlg-name{left:156px;font-size:14.5px}
   .dlg-tx p{font-size:22px;min-height:4.2em}
   body[data-view="les"] #app{padding-bottom:calc(var(--dlgh,200px) + 176px + env(safe-area-inset-bottom,0px))}
@@ -258,9 +268,6 @@ summary{padding:10px 0;cursor:pointer}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-<filter id="stk" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="3.2"/><feComponentTransfer result="o"><feFuncA type="linear" slope="26" intercept="-1.2"/></feComponentTransfer><feFlood flood-color="#fff"/><feComposite in2="o" operator="in" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-</defs></svg>
 <div class="wrap"><main id="app"></main></div>
 <div id="layer"></div>
 <div class="toast" id="toast" role="status"></div>
@@ -275,164 +282,56 @@ const CONFIG = {
   TEACHER_PIN: "2580"
 };
 /* ======================================================= */
-const SITE = "Grammar Training", BUILD = "2026-10-07a";
+const SITE = "Grammar Training", BUILD = "2026-10-09a";
 const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":true},{"id":"ar","name":"Articles and quantifiers","on":true},{"id":"pv","name":"Passive","on":true},{"id":"de","name":"German mistakes","on":true},{"id":"rc","name":"Relative clauses","on":false},{"id":"ca","name":"Capitals and apostrophes","on":false},{"id":"rs","name":"Reported speech","on":false},{"id":"rg","name":"Formal or informal","on":false}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
 
 /* ===== FIGUREN START (Quelle: figuren.js) ===== */
-/* Doggo und Dogga, Platzhalter (Version 1 "Sticker"). Stand 4. Oktober 2026.
-   Dies ist die EINZIGE Stelle für die Figuren und Kostüme. make.py setzt die Datei in index.html ein.
-   Aufruf: doggo(kostuem, gesicht)  kostuem: 'none', Baustein-Kürzel ('pp') oder Kürzel mit Plus für Gold ('pp+')
-                                     gesicht: 'ok', 'dry' (nach einem Fehler), 'happy' (nach einem Erfolg)
-           dogga(gesicht)           gesicht: 'stern' (Checkpoint) oder leer
-   Der weiße Rand braucht den SVG-Filter mit der id "stk" (steht in site.template.html im <defs>-Block).
-   Neues Kostüm: eine Funktion für die Ebene schreiben und unten in COSTUMES eintragen. */
-const INK='#141722',DRK='#141723',NOS='#141724';
-const fF=(d,f)=>`<path data-f d="${d}" fill="${f}"/>`;
-const fO=(d,w)=>`<path data-o d="${d}" fill="none" stroke="${INK}" stroke-width="${w||5}"/>`;
-const fFO=(d,f,w)=>fF(d,f)+fO(d,w);
-const fL=(d,c,w)=>`<path ${c===INK?'data-l':'data-h'} d="${d}" fill="none" stroke="${c}" stroke-width="${w}"/>`;
-const figWrap=(parts,label)=>`<svg class="dg" viewBox="-16 -96 352 392" role="img" aria-label="${label}"><g filter="url(#stk)" stroke-linejoin="round" stroke-linecap="round">${parts}</g></svg>`;
-function eye(cx,cy,o){
-  o=o||{};const rx=o.rx||13.5,ry=o.ry||16,dx=o.dx==null?-3:o.dx,dy=o.dy==null?1.5:o.dy,pr=o.pr||9.6;
-  let s=`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff" stroke="${INK}" stroke-width="4"/><circle cx="${cx+dx}" cy="${cy+dy}" r="${pr}" fill="${DRK}"/><circle cx="${cx+dx-3.2}" cy="${cy+dy-3.4}" r="3.2" fill="#fff"/><circle cx="${cx+dx+3}" cy="${cy+dy+3.2}" r="1.5" fill="#fff" opacity=".85"/>`;
-  if(o.lid!=null){const RX=rx+1.8,RY=ry+1.8,y=cy-ry+2*ry*o.lid,t=(y-cy)/RY,w=(RX*Math.sqrt(Math.max(0,1-t*t))).toFixed(1);
-    s+=`<path d="M${cx-w} ${y}A${RX} ${RY} 0 0 1 ${cx+ +w} ${y}Z" fill="${o.col}" stroke="${INK}" stroke-width="4"/>`;}
-  return s;
-}
-function wizardParts(g){
-  const m=g?'#F2B705':'#6B41DB',d=g?'#C98F00':'#4A2BA6',s=g?'#FFF7D6':'#FFD23F',l=g?'#FFE27A':'#8F6CF0';
-  const cone='M68 58C88 26 110 -20 128 -56C132 -64 144 -62 144 -52C148 -14 158 22 172 48Z';
-  return fF(cone,m)+fL('M118 -24C110 -4 100 18 90 36',l,7)+fO(cone)+
-    `<path d="M130 -6l4.600 9.400 10.400 1.400-7.600 7.200 1.900 10.300-9.300-5-9.300 5 1.900-10.300-7.600-7.200 10.400-1.400z" fill="${s}" stroke="${INK}" stroke-width="3"/>`+
-    `<ellipse cx="119" cy="56" rx="64" ry="13.500" transform="rotate(-7 119 56)" fill="${d}" stroke="${INK}" stroke-width="5"/>`+
-    fL('M68 58C98 66 138 62 170 46',l,4);
-}
-/* Baustein pp: Geschenkschleife ("present" perfect) */
-function bowParts(g){
-  const m=g?'#F2B705':'#E0342B',d=g?'#C98F00':'#A8221B',l=g?'#FFE27A':'#FF8A7C';
-  const tL='M108 46L92 66L103 64L106 74L120 52Z',tR='M124 46L141 65L130 64L128 74L114 52Z';
-  const lL='M116 46C104 14 68 6 58 28C50 48 88 60 116 46Z',lR='M116 46C128 14 164 6 174 28C182 48 144 60 116 46Z';
-  return '<g transform="translate(0 -9)">'+fFO(tL,d)+fFO(tR,d)+fF(lL,m)+fF(lR,m)+fL('M74 26C82 20 94 24 102 34',l,5)+fL('M158 26C150 20 138 24 130 34',l,5)+
-    fL('M70 38C84 46 100 46 112 42',d,4)+fL('M162 38C148 46 132 46 120 42',d,4)+fO(lL)+fO(lR)+
-    `<rect x="104" y="33" width="24" height="24" rx="8" fill="${m}" stroke="${INK}" stroke-width="5"/>`+fL('M110 40C114 38 118 38 122 40',l,3.5)+'</g>';
-}
-/* Baustein pr: Laborbrille, auf die Stirn geschoben (Fakten stehen im simple present) */
-function gogglesParts(g){
-  const m=g?'#F2B705':'#FF8A1F',d=g?'#C98F00':'#3A4154',gl=g?'#FFF6D0':'#C9EEFF',hi=g?'#FFFFFF':'#FFFFFF';
-  const strap='M70 66C80 50 98 44 116 42C134 40 152 46 166 62';
-  const lens=(cx,cy)=>`<circle cx="${cx}" cy="${cy}" r="19" fill="${m}" stroke="${INK}" stroke-width="5"/><circle cx="${cx}" cy="${cy}" r="11.500" fill="${gl}" stroke="${INK}" stroke-width="3.500"/>`+
-    `<path d="M${cx-6} ${cy-1}C${cx-6} ${cy-5} ${cx-3} ${cy-7} ${cx+1} ${cy-7}" fill="none" stroke="${hi}" stroke-width="3"/>`;
-  return `<path d="${strap}" fill="none" stroke="${INK}" stroke-width="16"/><path d="${strap}" fill="none" stroke="${d}" stroke-width="7"/>`+
-    `<path d="M112 37L124 35" fill="none" stroke="${INK}" stroke-width="12"/><path d="M112 37L124 35" fill="none" stroke="${m}" stroke-width="4"/>`+
-    lens(97,39)+lens(139,34);
-}
-/* Baustein pa: Wikingerhelm (Vergangenheit). Platzhalter, bis Pauls Bilder eingebaut sind (dort Kostüm 18 „Wikinger“). */
-function vikingParts(g){
-  const m=g?'#F2B705':'#B7C0CF',d=g?'#C98F00':'#7E8798',l=g?'#FFE27A':'#E9EEF5',hn=g?'#FFF7D6':'#F3E7C9',hs=g?'#E8C766':'#D3BE8E';
-  const dome='M64 64C62 28 88 4 118 1C148 -2 174 18 176 52Z';
-  const hL='M76 44C56 42 38 24 38 -4C38 -13 46 -14 48 -7C53 12 66 22 86 26Z';
-  const hR='M166 32C186 28 202 8 200 -20C200 -29 192 -30 190 -23C186 -4 176 8 156 14Z';
-  const band='M60 66C94 57 142 51 180 51';
-  const rivet=(x,y)=>`<circle cx="${x}" cy="${y}" r="3.400" fill="${l}" stroke="${INK}" stroke-width="2.500"/>`;
-  return fF(hL,hn)+fL('M50 6C56 20 66 30 80 36',hs,5)+fO(hL)+fF(hR,hn)+fL('M190 -8C186 8 176 18 162 24',hs,5)+fO(hR)+
-    fF(dome,m)+fL('M84 30C92 16 104 9 118 7',l,7)+fL('M119 3C120 22 120 40 119 57',d,5)+fO(dome)+
-    `<path d="${band}" fill="none" stroke="${INK}" stroke-width="17"/><path d="${band}" fill="none" stroke="${d}" stroke-width="8"/>`+
-    rivet(78,62)+rivet(99,57.500)+rivet(120,54.500)+rivet(141,52.500)+rivet(162,51.500);
-}
-/* Ein Eintrag pro Baustein: Name, Name der Gold-Variante, Doggos Spruch beim Freischalten, Ebene */
+/* Doggo und Dogga: Pauls eigene Bilder (Bögen vom 9. Oktober 2026). Vorher standen hier gezeichnete Platzhalter.
+   Dies ist die EINZIGE Stelle für die Figuren und Kostüme. make.py setzt die Datei in index.html ein und erzeugt die
+   Bilddateien fig-*.webp aus den Vorlagen in figuren/ (die figuren.py aus Pauls Bögen schneidet).
+   Aufruf: doggo(kostuem)          ganze Figur. kostuem: 'none', Baustein-Kürzel ('pr') oder Kürzel mit Plus für Gold ('pr+')
+           doggo(kostuem, gesicht) Brustbild ohne Kostüm (jedes Kostüm gibt es nur mit einem Gesicht).
+                                   gesicht: 'ok' fröhlich, 'happy' lachend, 'dry' kritisch, 'confused' verwirrt, 'surprised' überrascht
+           dogga(gesicht)          Brustbild. gesicht: 'stern' kritisch (Checkpoint), sonst lachend
+   Gold: dasselbe Bild mit goldenem statt weißem Rand (Klasse "gold", Rand per CSS in site.template.html).
+   Neues Kostüm: Vorlage in figuren/ legen, in FIGFILES in make.py eintragen und unten in COSTUMES. */
+const FACES={ok:'happy',happy:'laughing',dry:'critical',confused:'confused',surprised:'surprised'};
+/* Ein Eintrag pro Baustein: Bild, Name, Name der Gold-Variante, Doggos Spruch beim Freischalten.
+   Die Kostüme für rc, ca, rs und rg stehen schon hier. Sie erscheinen erst, wenn es den Baustein gibt. */
 const COSTUMES={
-  pr:{name:'Lab goggles',gold:'Gold lab goggles',say:'Facts take the simple present, so here is one: these goggles really suit me.',parts:gogglesParts},
-  pa:{name:'Viking helmet',gold:'Gold Viking helmet',say:'This helmet comes straight from the past, and it fits surprisingly well.',parts:vikingParts},
-  pp:{name:'Present bow',gold:'Gold bow',say:'A present bow for the present perfect. I didn\u2019t choose the pun, but I do like the bow.',parts:bowParts},
-  if:{name:'Wizard hat',gold:'Gold wizard hat',say:'If I were a wizard, I would wear this. So I do.',parts:wizardParts}
+  pr:{img:'scientist',name:'Scientist',gold:'Golden scientist',say:'Facts take the simple present, so here is one: this lab coat really suits me.'},
+  pa:{img:'viking',name:'Viking',gold:'Golden Viking',say:'This helmet comes straight from the past, and it fits surprisingly well.'},
+  pp:{img:'backpacker',name:'Backpacker',gold:'Golden backpacker',say:'I have never been to Australia, but I have already packed my bag.'},
+  fu:{img:'astronaut',name:'Astronaut',gold:'Golden astronaut',say:'Next year I am going to fly to the moon. I will probably forget the snacks.'},
+  qn:{img:'samurai',name:'Samurai',gold:'Golden samurai',say:'A samurai never asks “You are ready?” He asks “Are you ready?”'},
+  if:{img:'wizard',name:'Wizard',gold:'Golden wizard',say:'If I were a wizard, I would wear this. So I do.'},
+  aa:{img:'athlete',name:'Athlete',gold:'Golden athlete',say:'I run fast, I jump high and I look good while I do it.'},
+  ar:{img:'chef',name:'Chef',gold:'Golden chef',say:'A little salt, a few eggs and no idea what I am cooking.'},
+  pv:{img:'artist',name:'Artist',gold:'Golden artist',say:'This painting was made by me. It is said to be priceless.'},
+  de:{img:'knight',name:'Knight',gold:'Golden knight',say:'A good knight does not become a sword. He gets one.'},
+  rc:{img:'dj',name:'DJ',gold:'Golden DJ',say:'I am the DJ who plays the songs that nobody asked for.'},
+  ca:{img:'princess',name:'Princess',gold:'Golden princess',say:'It’s my crown and its sparkle is real. Princess with a capital P, please.'},
+  rs:{img:'pilot',name:'Pilot',gold:'Golden pilot',say:'The captain said that we would land soon. I am the captain.'},
+  rg:{img:'gentleman',name:'Gentleman',gold:'Golden gentleman',say:'Would you be so kind as to admire my hat? Cheers, mate.'}
 };
+/* In der Vorschau-Datei stehen die Bilder als data:-Adressen in window.FIGDATA, auf der Website als eigene Dateien */
+function figSrc(n){return (window.FIGDATA&&window.FIGDATA[n])||('fig-'+n+'.webp');}
+function figImg(n,cls,label){
+  return '<img class="dg '+cls+'" src="'+figSrc(n)+'" alt="'+label+'" draggable="false" onerror="this.style.visibility=\'hidden\'">';
+}
 function costumeOf(c){
   if(!c||c==='none')return null;
   const gold=c.slice(-1)==='+',k=COSTUMES[gold?c.slice(0,-1):c];
   return k?{k,gold}:null;
 }
 function doggo(c,mood){
-  const B='#2F6BE8',S='#1F4DB8',Lt='#7FACFF',M='#9DBFFF';
-  const cs=costumeOf(c),hat=!!cs;mood=mood||'ok';
-  const tail='M268 162C280 140 282 112 277 86L271 68L283 78L289 60L295 79L307 71L299 92C305 122 301 152 290 176Z';
-  const body='M116 188C112 160 132 146 164 144L250 146C278 148 294 164 294 192C294 224 276 242 246 243L160 243C132 241 118 224 116 188Z';
-  const belly='M118 206C132 230 150 236 164 236L246 236C270 234 286 222 293 200C292 228 274 243 246 243L160 243C134 241 120 228 118 206Z';
-  const legF='M124 214L123 258C114 262 111 277 120 283L160 283C169 277 167 262 159 258L158 216';
-  const legB='M250 218L249 258C240 262 237 277 246 283L286 283C295 277 293 262 285 258L286 208';
-  const legF2='M164 226L163 252C156 256 155 268 162 273L192 273C198 268 197 256 191 252L190 228Z';
-  const legB2='M216 228L215 252C209 256 208 268 214 273L244 273C250 268 249 256 243 252L242 228Z';
-  const band='M96 162C120 178 160 170 184 142L193 158C186 190 164 216 141 239C127 215 109 193 90 178Z';
-  const earF='M92 66C80 44 62 34 42 42C46 58 54 74 72 84Z';
-  const head='M80 58C100 48 138 46 154 60C170 74 174 104 168 130C164 150 148 164 126 168L70 172C48 172 30 164 24 148C18 134 24 118 38 114L66 108C66 88 70 70 80 58Z';
-  const muzz='M27 142C27 128 44 122 62 122C82 122 98 132 98 146C98 160 84 170 66 170C44 170 27 158 27 142Z';
-  const nose='M13 120C12 108 42 103 46 114C48 125 38 137 30 138C21 139 14 131 13 120Z';
-  const earN='M146 60C170 48 200 60 208 90C212 110 203 128 190 135C186 118 174 98 152 86Z';
-  const tuft='M100 55L104 32L113 47L121 25L127 47L139 35L135 57';
-  let p='';
-  p+=fF(tail,B)+fL('M291 104C294 126 291 146 284 162',Lt,5)+fO(tail);
-  p+=fFO(legF2,S)+fFO(legB2,S);
-  p+=fF(body,B)+fF(belly,S)+fL('M176 156L246 158C262 160 274 168 280 178',Lt,7)+fO(body);
-  p+=fL('M222 198C221 187 240 184 243 197C245 210 226 214 222 203C220 197 229 193 233 198',S,3.5)+fL('M194 200q6 4 12 1M262 206q5 3 10 0',S,3.5);
-  p+=fF(legF,B)+fL('M135 224V250',Lt,6)+fO(legF)+fF(legB,B)+fL('M262 226V250',Lt,6)+fO(legB);
-  p+=fL('M128 283v-9M141 283v-9M254 283v-9M267 283v-9',INK,3.5);
-  p+=fFO(band,'#191B22')+`<path d="M122 186h13l-6.500 11zM150 172l12 3-9 9zM136 208h12l-6 10zM162 194l10 6-11 5z" fill="#9AA3B5"/>`;
-  /* Kopf, leicht geneigt */
-  let h='';
-  h+=fFO(earF,S)+fL('M58 48C62 58 68 66 76 72',B,4);
-  h+=fF(head,B)+fF(muzz,M)+fL('M96 60C108 54 128 54 142 62',Lt,6)+fO(head);
-  if(!hat)h+=fF(tuft+'Z',B)+fO(tuft);
-  if(mood==='dry'){
-    h+=fL('M30 138L32 147C46 155 66 156 84 152',INK,4.5);
-  }else if(mood==='happy'){
-    h+=`<path d="M32 146C48 158 80 158 100 142C100 170 50 180 32 146Z" fill="#7A1F3A" stroke="${INK}" stroke-width="4.500"/><path d="M52 164C60 154 80 154 88 160C82 172 62 174 52 164Z" fill="#FF8FB0"/>`+fL('M30 138L32 146',INK,4.5);
-  }else{
-    h+=`<path d="M58 158C55 180 82 180 80 157Z" fill="#FF8FB0" stroke="${INK}" stroke-width="4"/>`+fL('M69 163v8',INK,2.5)+fL('M30 138L32 148C48 162 82 162 101 144M101 144c4-1 6-4 6-8',INK,4.5);
-  }
-  h+=`<path d="${nose}" fill="${NOS}"/>`+`<ellipse cx="24" cy="114" rx="6" ry="3.200" fill="#fff" opacity=".9" transform="rotate(-12 24 114)"/>`;
-  if(mood==='happy'){
-    h+=eye(92,97,{col:B})+fL('M117 97Q131 80 146 95',INK,5)+fL('M78 73Q92 65 105 73M119 66Q133 59 148 69',INK,4.5);
-  }else if(mood==='dry'){
-    h+=eye(92,98,{col:B,lid:.3,dx:4,dy:2})+eye(131,94,{col:B,lid:.16,dx:4,dy:2});
-    h+=fL('M76 80L106 83M118 63Q134 52 149 65',INK,4.5);
-  }else{
-    h+=eye(92,97,{col:B})+eye(131,93,{col:B});
-    h+=fL('M77 75L104 78M119 67Q134 56 148 67',INK,4.5);
-  }
-  h+=fF(earN,S)+fL('M166 70C186 78 196 98 194 118',B,5)+fO(earN);
-  if(cs)h+=cs.k.parts(cs.gold);
-  p+=`<g transform="rotate(-5 150 165) translate(150 165) scale(1.1) translate(-150 -165)">${h}</g>`;
-  return figWrap(p,'Doggo');
+  if(mood)return figImg('doggo-'+(FACES[mood]||'happy'),'face','Doggo');
+  const cs=costumeOf(c);
+  return cs?figImg('doggo-'+cs.k.img,'full'+(cs.gold?' gold':''),'Doggo: '+(cs.gold?cs.k.gold:cs.k.name)):figImg('doggo','full','Doggo');
 }
-function dogga(mood){
-  const R='#E5392D',S='#B8271E',Lt='#FF8375',Y='#FFC933';
-  const body='M150 198C146 164 174 148 214 148C262 148 296 168 296 202C296 232 270 245 222 245C178 245 152 234 150 198Z';
-  const belly='M154 214C176 236 250 240 294 212C290 236 268 245 222 245C182 245 158 238 154 214Z';
-  const hn='M206 154C190 142 180 124 178 100C176 78 160 58 136 54C112 50 92 64 86 86L52 104C36 110 26 124 30 140C34 154 50 160 66 156L100 150C112 160 126 178 148 200';
-  const ear1='M106 66C96 32 98 -8 113 -12C128 -15 134 24 130 58';
-  const ear2='M140 56C142 26 156 -6 171 -2C186 3 178 44 164 70';
-  const sad='M196 152C222 142 252 146 266 158C260 182 236 192 212 186C200 180 194 166 196 152Z';
-  const leg=(x,f)=>`<path d="M${x} 224V258" fill="none" stroke="${INK}" stroke-width="33"/><path d="M${x} 224V258" fill="none" stroke="${f}" stroke-width="23"/><circle cx="${x}" cy="270" r="17.500" fill="${f}" stroke="${INK}" stroke-width="5"/>`;
-  let p='';
-  p+=`<path d="M286 178C296 170 301 160 302 150" fill="none" stroke="${INK}" stroke-width="20"/><path d="M286 178C296 170 301 160 302 150" fill="none" stroke="${R}" stroke-width="10"/><circle cx="303" cy="139" r="15" fill="${R}" stroke="${INK}" stroke-width="5"/><circle cx="298" cy="134" r="4" fill="${Lt}"/>`;
-  p+=leg(198,S)+leg(244,S);
-  p+=fF(body,R)+fF(belly,S)+fFO(sad,Y)+fL('M208 158C224 152 244 154 256 162','#FFE596',5)+fO(body);
-  p+=`<circle cx="276" cy="190" r="8" fill="#fff"/><circle cx="252" cy="214" r="9" fill="#fff"/><circle cx="281" cy="216" r="5.500" fill="#fff"/><circle cx="222" cy="222" r="6.500" fill="#fff"/>`;
-  p+=leg(170,R)+leg(272,R);
-  let h='';
-  h+=fF(ear1+'Z',R)+fL('M113 46C110 28 111 12 115 4',S,8)+fO(ear1)+fF(ear2+'Z',R)+fL('M156 46C158 30 163 16 168 10',S,8)+fO(ear2);
-  h+=fF(hn+'Z',R)+fL('M104 66C114 60 130 60 142 66',Lt,6)+fL('M172 112C176 130 184 142 194 150',S,5)+fO(hn);
-  h+=`<path d="M0 12C-12 2 -10 -10 -3 -10C0 -10 1.500 -7.500 2 -5C2.500 -7.500 4 -10 7 -10C14 -10 16 2 4 12Z" transform="translate(146 76) scale(1.15)" fill="#fff" stroke="${INK}" stroke-width="3"/>`;
-  h+=`<ellipse cx="42" cy="124" rx="4" ry="5.500" fill="${INK}" transform="rotate(-20 42 124)"/>`;
-  if(mood==='stern'){
-    h+=fL('M40 144C54 150 74 149 90 142',INK,4.5);
-    h+=eye(112,95,{rx:15.5,ry:17.5,pr:10.5,col:R,lid:.26,dx:-4,dy:2})+fL('M92 75L130 66',INK,5);
-  }else{
-    h+=`<path d="M38 142C54 154 80 152 97 136C90 160 52 166 38 142Z" fill="#fff" stroke="${INK}" stroke-width="4"/>`;
-    h+=eye(112,95,{rx:15.5,ry:17.5,pr:10.5,col:R,dx:-4,dy:1})+fL('M94 69Q112 58 130 67',INK,5);
-  }
-  p+=h;
-  return figWrap(p,'Dogga');
-}
+function dogga(mood){return figImg('dogga-'+(mood==='stern'?'critical':'laughing'),'face','Dogga');}
+/* Die Gesichter nach einer Antwort vorab laden, damit sie ohne Verzögerung erscheinen */
+function figPreload(){['happy','laughing','critical','confused'].forEach(f=>{const i=new Image();i.src=figSrc('doggo-'+f);});}
 
 /* ===== FIGUREN ENDE ===== */
 
@@ -765,10 +664,10 @@ function globalNext(){
 /* ---------- Kostüme ---------- */
 function wearOpts(){
   const o=[['none','Nothing']];
-  UNITS.forEach(u=>{const k=COSTUMES[u.id],e=earned(S.units[u.id]);if(k&&e>=1){o.push([u.id,k.name]);if(e>=2)o.push([u.id+'+',k.gold]);}});
+  UNITS.forEach(u=>{const k=COSTUMES[u.id],e=earned(S.units[u.id]);if(k&&e>=1)o.push(e>=2?[u.id+'+',k.gold]:[u.id,k.name]);});   // ist Gold verdient, steht nur die goldene Fassung zur Wahl
   return o;
 }
-function wearNow(){return wearOpts().some(x=>x[0]===S.wear)?S.wear:'none';}
+function wearNow(){const o=wearOpts();if(o.some(x=>x[0]===S.wear))return S.wear;return o.some(x=>x[0]===S.wear+'+')?S.wear+'+':'none';}   // getragen und inzwischen Gold verdient: Gold
 
 /* ---------- Durchlauf starten ---------- */
 function start(kind,uid,L,n,preview){
@@ -884,7 +783,7 @@ function homeHTML(){
   return '<header class="top"><span class="brand">'+esc(SITE)+'</span><span class="wkk">'+(st?'streak <b>'+st+(st===1?' week':' weeks')+'</b>':'no streak yet')+'</span></header>'+
     '<section class="hero"><div>'+doggo(wearNow())+'</div><div><p class="say">'+esc(homeSay())+'</p>'+go+'</div></section>'+
     '<p class="today" id="clock">'+esc(clockText())+'</p>'+
-    (wo.length>1?'<div class="wear"><span>Doggo wears</span>'+wo.map(x=>'<button data-act="wear" data-w="'+x[0]+'" aria-pressed="'+(wearNow()===x[0])+'">'+esc(x[1])+'</button>').join('')+'</div>'
+    (wo.length>1?'<div class="wear"><span class="wn">Doggo wears: '+esc(wo.filter(x=>x[0]===wearNow())[0][1])+'</span>'+wo.map(x=>'<button class="wb" data-act="wear" data-w="'+x[0]+'" aria-pressed="'+(wearNow()===x[0])+'" aria-label="'+esc(x[1])+'" title="'+esc(x[1])+'">'+doggo(x[0])+'</button>').join('')+'</div>'
       :'<div class="wear"><span>No costumes yet. Reach '+LV.k.sym+' '+LV.k.n+' in a topic and Doggo gets one.</span></div>')+
     '<section class="trail"><h2 class="sq">All topics'+squig+'</h2><ol class="idx">'+UNITS.map(row).join('')+'</ol></section>'+
     '<div class="foot"><button class="btn sec sm" data-act="finish">Finish session</button><span>Only when your teacher asks for it.</span><span class="sp"></span><button class="lk" data-act="teacher">Lehrkraft</button></div>'+
@@ -922,7 +821,7 @@ function pathHTML(){
         :'<button class="btn" data-act="start" data-k="set"'+at+'>'+(n.best===null?'Start set':'Practise again')+'</button>'+ms.map((m,k)=>'<button class="lk" data-act="lesson"'+lat(m)+'>'+(ms.length>1?'Watch lesson '+(k+1):'Watch the lesson')+(ls[m-1]?' again':'')+'</button>').join(''))+'</div>';
     return '<li class="'+(n.next?'nx':'')+'"><button class="rw" data-act="sel" data-i="'+n.i+'" aria-expanded="'+open+'">'+pm(n.ix,n.x,28)+
       '<span class="nm">'+(n.next?'<span class="hl">'+esc(n.name)+'</span>':esc(n.name))+'</span>'+
-      (n.cp&&n.L===ns.L?'<span class="mini">'+dogga('stern')+'</span>':n.next&&ns.k==='les'?'<span class="mini">'+doggo(wearNow())+'</span>':'')+
+      (n.cp&&n.L===ns.L?'<span class="mini">'+dogga('stern')+'</span>':n.next&&ns.k==='les'?'<span class="mini">'+doggo('none','ok')+'</span>':'')+
       '<span class="sc'+(n.best===null?' no':'')+'">'+(n.best!==null?n.best+'%':n.next?'next':'')+'</span></button>'+
       (open?'<div class="xp">'+body+'</div>':'')+'</li>';
   };
@@ -1002,7 +901,7 @@ function lessonHTML(){
   else if(st.b&&!(st.o&&st.o.every(o=>st.b.split(' // ').indexOf(o)>=0)))h+='<div class="board">'+boardHTML(st.b,prev,fill)+'</div>';
   if(st.o)h+='<div class="opts'+(st.o.every(o=>o.length<20)&&st.o.length<4?' two':'')+'">'+st.o.map((o,k)=>'<button class="opt'+(les.ans===null?'':k===st.c?' right':k===les.ans?' wrong':' dim')+'" data-act="lpick" data-k="'+k+'"'+(les.ans===null?'':' disabled')+'>'+esc(o)+'</button>').join('')+'</div>';
   const label=les.ph==='end'?(les.preview?'Done':les.more?'Next lesson':'Start the set'):'Next';
-  h+='</div><div class="dlg"><div class="dlg-in" data-act="lnext"><div class="dlg-fig">'+doggo(wearNow(),say.m)+'</div><span class="dlg-name">Doggo</span><div class="dlg-tx">'+
+  h+='</div><div class="dlg"><div class="dlg-in" data-act="lnext"><div class="dlg-fig">'+doggo('none',say.m||'ok')+'</div><span class="dlg-name">Doggo</span><div class="dlg-tx">'+
     '<p id="ltx" data-t="'+esc(say.t)+'"></p></div><div class="dlg-ft">'+(les.ph==='x'&&les.i>0?'<button class="lk" data-act="lback">'+IC.back+'Back</button>':'<span></span>')+
     (asked?'<span class="dlg-hint">Tap an answer</span>':'<button class="btn sm" data-act="lnext" id="lnextbtn">'+label+'<span class="dlg-more" aria-hidden="true">\u25BC</span></button>')+'</div></div></div>';
   return h;
@@ -1074,10 +973,10 @@ function runHTML(){
   if(it.t==='fix'&&!done){
     h+='<div class="fixin"><input type="text" id="g0" value="'+esc((r.given||[])[0]||'')+'" placeholder="correct form" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Correct form"></div>';
   }
-  if(run.phase==='retry')h+='<div class="fb no" role="status"><div class="dgw">'+doggo(wearNow(),r.typo?'ok':'dry')+'</div><div class="tx"><span class="v">'+(r.typo?'Check your spelling.':'Not yet. One more try.')+'</span>'+(r.typo||!it.f?'':'<p class="why">'+esc(it.f)+'</p>')+'</div></div>';
+  if(run.phase==='retry')h+='<div class="fb no" role="status"><div class="dgw">'+doggo('none',r.typo?'confused':'dry')+'</div><div class="tx"><span class="v">'+(r.typo?'Check your spelling.':'Not yet. One more try.')+'</span>'+(r.typo||!it.f?'':'<p class="why">'+esc(it.f)+'</p>')+'</div></div>';
   if(done){
     const res=run.res[run.res.length-1];
-    h+='<div class="fb'+(res.ok?'':' no')+'" role="status">'+(res.say.fig?'<div class="dgw">'+doggo(wearNow(),res.say.fig)+'</div>':'')+
+    h+='<div class="fb'+(res.ok?'':' no')+'" role="status">'+(res.say.fig?'<div class="dgw">'+doggo('none',res.say.fig)+'</div>':'')+
       '<div class="tx"><span class="v">'+esc(res.say.line)+'</span>'+(whyOf(it)?'<p class="why">'+esc(whyOf(it))+'</p>':'')+'</div></div>'+
       '<div class="acts"><button class="btn" data-act="next" id="nextbtn">'+(run.i+1<n?'Next':'Finish')+'</button></div>';
   }else if(it.t!=='mc'){
@@ -1088,7 +987,7 @@ function runHTML(){
 function wonHTML(){
   if(!run.won||!COSTUMES[run.uid])return '';
   const k=COSTUMES[run.uid], gold=run.won===2;
-  return '<div class="won"><div>'+doggo(run.uid+(gold?'+':''),'happy')+'</div><div><b>New costume: '+esc(gold?k.gold:k.name)+'</b><p>'+esc(gold?'The same costume in gold, because you finished Advanced as well.':k.say)+'</p><span class="mute" style="font-size:14px">Change it on the start page.</span></div></div>';
+  return '<div class="won"><div>'+doggo(run.uid+(gold?'+':''))+'</div><div><b>New costume: '+esc(gold?k.gold:k.name)+'</b><p>'+esc(gold?'The same costume in gold, because you finished Advanced as well.':k.say)+'</p><span class="mute" style="font-size:14px">Change it on the start page.</span></div></div>';
 }
 function corrHTML(){
   const wrong=run.res.filter(r=>!r.ok||r.pts<1); if(!wrong.length)return '';
@@ -1112,7 +1011,7 @@ function endHTML(){
   if(run.kind==='set'){
     const s=statusFor(pct);
     h+='<p class="resline">'+(s===3?'This set is done.':s===2?'Almost. 80% completes the set.':'Not there yet. Open the rule card and try again.')+'</p>'+
-      '<div class="coach"><div>'+doggo(wearNow(),s===3?'happy':s===2?'ok':'dry')+'</div><p>'+esc(run.endLine)+'</p></div>';
+      '<div class="coach"><div>'+doggo('none',pct===100?'surprised':s===3?'happy':s===2?'ok':'dry')+'</div><p>'+esc(run.endLine)+'</p></div>';
   }else{
     const pass=pct>=80, lv=U.lv[run.L], ws=lv.r||1, ag=run.preview?0:lesList(run.uid,run.L,ws).filter(m=>(lv.l||[])[m-1]===2).length;
     h+='<p class="resline">'+(pass?'You passed '+LV[run.L].n+'.':'You need 80%.'+(run.preview?'':' Best next step: \u201C'+esc(setName(run.uid,run.L,ws))+'\u201D'+(ag?', with Doggo\u2019s lesson'+(ag>1?'s':'')+' first':'')+'.'+(lv.c[0]>=2?' Read the rule card first and ask your teacher about the corrections below.':'')))+'</p>'+
@@ -1366,7 +1265,7 @@ function boot(skipLink){
     run=null;render();
   },fail);
 }
-boot(false); tick();
+boot(false); tick(); figPreload();
 </script>
 </body>
 </html>
