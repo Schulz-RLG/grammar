@@ -282,8 +282,8 @@ const CONFIG = {
   TEACHER_PIN: "2580"
 };
 /* ======================================================= */
-const SITE = "Grammar Training", BUILD = "2026-10-09a";
-const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":true},{"id":"ar","name":"Articles and quantifiers","on":true},{"id":"pv","name":"Passive","on":true},{"id":"de","name":"German mistakes","on":true},{"id":"rc","name":"Relative clauses","on":false},{"id":"ca","name":"Capitals and apostrophes","on":false},{"id":"rs","name":"Reported speech","on":false},{"id":"rg","name":"Formal or informal","on":false}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
+const SITE = "Grammar Training", BUILD = "2026-10-10a";
+const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":true},{"id":"ar","name":"Articles and quantifiers","on":true},{"id":"pv","name":"Passive","on":true},{"id":"de","name":"German mistakes","on":true},{"id":"rc","name":"Relative clauses","on":true},{"id":"ca","name":"Capitals and apostrophes","on":true},{"id":"rs","name":"Reported speech","on":false},{"id":"rg","name":"Formal or informal","on":false}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
 
 /* ===== FIGUREN START (Quelle: figuren.js) ===== */
 /* Doggo und Dogga: Pauls eigene Bilder (Bögen vom 9. Oktober 2026). Vorher standen hier gezeichnete Platzhalter.
@@ -310,7 +310,7 @@ const COSTUMES={
   pv:{img:'artist',name:'Artist',gold:'Golden artist',say:'This painting was made by me. It is said to be priceless.'},
   de:{img:'knight',name:'Knight',gold:'Golden knight',say:'A good knight does not become a sword. He gets one.'},
   rc:{img:'dj',name:'DJ',gold:'Golden DJ',say:'I am the DJ who plays the songs that nobody asked for.'},
-  ca:{img:'princess',name:'Princess',gold:'Golden princess',say:'It’s my crown and its sparkle is real. Princess with a capital P, please.'},
+  ca:{img:'princess',name:'Princess',gold:'Golden princess',say:'It’s my crown, and I love its sparkle. Check the apostrophes, please.'},
   rs:{img:'pilot',name:'Pilot',gold:'Golden pilot',say:'The captain said that we would land soon. I am the captain.'},
   rg:{img:'gentleman',name:'Gentleman',gold:'Golden gentleman',say:'Would you be so kind as to admire my hat? Cheers, mate.'}
 };
@@ -368,21 +368,26 @@ function edEnd(x,y){return stemEnd(x,y,'ed');}
 // Seit Baustein aa gilt dasselbe vor -ly, -er und -est: happyly/happily, easyer/easier, bigest/biggest, niceest/nicest sind Regel-Fehler, keine Tippfehler.
 // Ebenso das Adjektiv auf -le statt des Adverbs auf -ly (terrible/terribly): Das ist der Kernfehler des Bausteins, nur ein Buchstabe Unterschied.
 function sufEnd(x,y){return stemEnd(x,y,'ly')||stemEnd(x,y,'er')||stemEnd(x,y,'est')||(x.slice(0,-1)===y.slice(0,-1)&&/^l[ey]$/.test(x.slice(-2))&&/^l[ey]$/.test(y.slice(-2)));}
-function judge(input,accepted){
-  const n=norm(input); if(!n)return 'no';
-  const acc=accepted.map(norm);
+// Seit Baustein ca: Bausteine mit "exact" in meta.json (Items mit cs:1) prüfen Groß- und Kleinschreibung und den Apostroph genau.
+// Dort ist "monday" falsch und kein Tippfehler, ebenso ein fehlender oder verrutschter Apostroph (sisters, does'nt). Andere Vertipper in langen Wörtern bleiben Tippfehler.
+function normCS(s){return String(s).replace(/[\u2019\u2018`\u00B4]/g,"'").replace(/\s+/g,' ').trim().replace(/[.!?]+$/,'').trim();}
+function judge(input,accepted,cs){
+  const nf=cs?normCS:norm, n=nf(input); if(!n)return 'no';
+  const acc=accepted.map(nf);
   if(acc.indexOf(n)>=0)return 'ok';
-  const ap=s=>s.replace(/'/g,''); if(acc.some(a=>ap(a)===ap(n)))return 'typo';
+  const ap=s=>s.replace(/'/g,''); if(!cs&&acc.some(a=>ap(a)===ap(n)))return 'typo';
   const w=n.split(' ');
   for(const a of acc){
     const aw=a.split(' '); if(aw.length!==w.length)continue;
     const diff=[]; for(let i=0;i<w.length;i++)if(w[i]!==aw[i])diff.push(i);
-    if(diff.length===1){const i=diff[0]; if(Math.min(w[i].length,aw[i].length)>=6&&dl(w[i],aw[i])===1&&!sEnd(w[i],aw[i])&&!edEnd(w[i],aw[i])&&!sufEnd(w[i],aw[i]))return 'typo';}
+    if(diff.length===1){const i=diff[0], x=w[i], y=aw[i];
+      if(cs&&(x.indexOf("'")>=0||y.indexOf("'")>=0||x.toLowerCase()===y.toLowerCase()))continue;
+      if(Math.min(x.length,y.length)>=6&&dl(x,y)===1&&!sEnd(x,y)&&!edEnd(x,y)&&!sufEnd(x,y))return 'typo';}
   }
   return 'no';
 }
 function judgeAll(inputs,it){ // getippte Items mit einer oder mehreren Lücken
-  const r=it.a.map((acc,k)=>judge(inputs[k]||'',acc));
+  const r=it.a.map((acc,k)=>judge(inputs[k]||'',acc,it.cs));
   if(r.indexOf('no')>=0)return {v:'no',each:r};
   if(r.indexOf('typo')>=0)return {v:'typo',each:r};
   return {v:'ok',each:r};
