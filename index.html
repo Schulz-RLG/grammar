@@ -13,14 +13,14 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>
 :root{
-  --bg:#ECEFF2;--sf:#FAFBFC;--ink:#1A1D25;--mut:#5A616E;--ln:#CBD1DA;--pri:#2A4BC0;--acc:#FFE45C;--onacc:#1A1D25;--red:#CF2F27;--gold:#B88400;--gapbg:#FFE45C;--r:3px;
+  --bg:#ECEFF2;--sf:#FAFBFC;--ink:#1A1D25;--mut:#5A616E;--ln:#CBD1DA;--pri:#2A4BC0;--acc:#FFE45C;--onacc:#1A1D25;--red:#CF2F27;--ok:#187436;--gold:#B88400;--gapbg:#FFE45C;--r:3px;
   --fu:"Avenir Next","Avenir","Segoe UI",system-ui,sans-serif;
   --ft:Charter,"Bitstream Charter","Iowan Old Style",ui-serif,Georgia,"Noto Serif",serif;
 }
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg:#14161B;--sf:#1C1F27;--ink:#E8EAEE;--mut:#9BA2AE;--ln:#333945;--pri:#93AAFF;--acc:#6B5A00;--onacc:#FFF6C7;--red:#FF7468;--gold:#E5B93C;--gapbg:#5A4C00}
+  :root:not([data-theme="light"]){--bg:#14161B;--sf:#1C1F27;--ink:#E8EAEE;--mut:#9BA2AE;--ln:#333945;--pri:#93AAFF;--acc:#6B5A00;--onacc:#FFF6C7;--red:#FF7468;--ok:#5BD37A;--gold:#E5B93C;--gapbg:#5A4C00}
 }
-:root[data-theme="dark"]{--bg:#14161B;--sf:#1C1F27;--ink:#E8EAEE;--mut:#9BA2AE;--ln:#333945;--pri:#93AAFF;--acc:#6B5A00;--onacc:#FFF6C7;--red:#FF7468;--gold:#E5B93C;--gapbg:#5A4C00}
+:root[data-theme="dark"]{--bg:#14161B;--sf:#1C1F27;--ink:#E8EAEE;--mut:#9BA2AE;--ln:#333945;--pri:#93AAFF;--acc:#6B5A00;--onacc:#FFF6C7;--red:#FF7468;--ok:#5BD37A;--gold:#E5B93C;--gapbg:#5A4C00}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fu);font-size:16px;line-height:1.45;
@@ -54,7 +54,7 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .sq svg{position:absolute;left:-2px;bottom:-2px;width:calc(100% + 8px);height:8px}
 .pm{flex:none}
 .pm .o{fill:none;stroke:var(--mut);stroke-width:1.6;stroke-linejoin:round}
-.pm .t{fill:none;stroke:var(--red);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pm .t{fill:none;stroke:var(--ok);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .pm .g{fill:none;stroke:var(--gold);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .banner{background:var(--acc);color:var(--onacc);padding:8px 12px;border-radius:var(--r);margin-bottom:14px;font-weight:600}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1A1D25;color:#fff;font-weight:600;font-size:14px;line-height:1.3;padding:10px 16px;border-radius:8px;z-index:80;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100vw - 32px)}
@@ -64,7 +64,7 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:22px;padding-bottom:10px;border-bottom:1.5px solid var(--ink)}
 .brand{font-family:var(--ft);font-weight:700;font-size:20px}
 .wkk{font-size:14.5px;color:var(--mut);text-align:right}
-.wkk b{color:var(--red);font-family:var(--ft);font-style:italic;font-size:17px}
+.wkk b{color:var(--ok);font-family:var(--ft);font-style:italic;font-size:17px}
 .hero{display:grid;grid-template-columns:124px 1fr;gap:12px;align-items:start;margin-bottom:8px}
 .say{font-family:var(--ft);font-size:20px;line-height:1.35;font-style:italic}
 .go{display:block;width:100%;margin-top:14px;padding:6px 0;min-height:56px;border:0;background:transparent;text-align:left;font-family:var(--ft);font-size:20px;font-weight:700;line-height:1.5}
@@ -72,7 +72,7 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .today{font-size:14px;color:var(--mut);margin-top:10px;min-height:20px}
 .wear{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--mut);margin:14px 0 4px}
 .wear button{min-height:40px;padding:0 14px;border:1px solid var(--ln);background:transparent;border-radius:var(--r);font-weight:600;color:var(--ink)}
-.wear button[aria-pressed="true"]{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.wear button[aria-pressed="true"]{border-color:var(--pri);box-shadow:inset 0 0 0 1px var(--pri)}
 .wear button.wb{padding:5px 6px;min-height:70px}
 .wear .wn{flex-basis:100%;font-weight:600;color:var(--ink)}
 .trail{margin-top:30px}
@@ -83,7 +83,7 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .nd{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:1.6px solid var(--mut);font-family:var(--ft);font-size:16px;line-height:1;color:var(--mut)}
 .idx li.cur .nd{border-color:var(--ink);background:var(--acc);color:var(--onacc);font-weight:700}
 .idx li.cur .nm{font-weight:700}
-.idx li.fin .nd{border-color:var(--red)}
+.idx li.fin .nd{border-color:var(--ok)}
 .idx li.off .ir{color:var(--mut);font-weight:400}
 .idx li.off .nd{border-color:var(--ln)}
 .idx li.off .mk{opacity:.45}
@@ -97,16 +97,19 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .h1{font-family:var(--ft);font-size:30px;line-height:1.15;font-weight:700;margin-bottom:16px}
 .coach{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:center;margin-bottom:14px}
 .coach p{font-family:var(--ft);font-style:italic;font-size:18.5px;line-height:1.4}
-.note{font-family:var(--ft);font-style:italic;color:var(--red);font-size:16px}
+.note{font-family:var(--ft);font-style:italic;color:var(--pri);font-size:16px}
 .lv{margin-top:26px}
-.lv em{font-family:var(--ft);font-style:italic;font-size:15.5px;color:var(--red);margin-left:10px}
+.lv em{font-family:var(--ft);font-style:italic;font-size:15.5px;color:var(--pri);margin-left:10px}
 .rows{list-style:none;margin:8px 0 0;padding:0}
 .rows li{border-bottom:1px solid var(--ln)}
 .rw{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 4px;border:0;background:transparent;text-align:left}
 .rw .nm{flex:1;font-family:var(--ft);font-size:18.5px;line-height:1.3}
-.rw .sc{font-family:var(--ft);font-style:italic;font-size:18px;color:var(--red);flex:none}
+.rw .sc{font-family:var(--ft);font-style:italic;font-size:18px;color:var(--ok);flex:none}
+.rw .sc.lo{color:var(--red)}   /* bestes Ergebnis unter 80 % */
+.rw .sc .lock{vertical-align:-3px}
 .rw .sc.no{color:var(--mut);font-style:normal;font-size:14px;font-family:var(--fu)}
 .rows li.nx .nm{font-weight:700}
+.rows li.shut .nm{color:var(--mut)}
 .rw .mini{width:48px;flex:none}
 .xp{padding:2px 4px 16px 44px;display:grid;gap:10px}
 .xp p{font-size:14.5px;color:var(--mut)}
@@ -131,9 +134,9 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .fixin input::placeholder{color:var(--onacc);opacity:.55}
 .gap{display:inline-block;min-width:3.2em;height:1.15em;vertical-align:-.2em;background:var(--gapbg);border-bottom:2.5px solid var(--ink);border-radius:var(--r) var(--r) 0 0;margin:0 .12em}
 mark{background:var(--gapbg);color:var(--onacc);padding:0 4px;border-radius:3px}
-mark.ok{font-weight:700}
+mark.ok{background:transparent;color:var(--ok);font-weight:700;padding:0;border-radius:0;border-bottom:2.5px solid var(--ok)}
 del{color:var(--red);text-decoration:line-through;text-decoration-thickness:2.5px}
-ins{color:var(--red);text-decoration:none;font-weight:700;border-bottom:2.5px solid var(--red)}
+ins{color:var(--ok);text-decoration:none;font-weight:700;border-bottom:2.5px solid var(--ok)}
 .opts{display:grid;gap:10px;margin-top:18px}
 .opts.two{grid-template-columns:1fr 1fr}
 .opt{min-height:56px;padding:10px 14px;border:1.5px solid var(--ink);background:var(--sf);border-radius:var(--r);font-family:var(--ft);font-size:19px;text-align:left}
@@ -142,6 +145,7 @@ ins{color:var(--red);text-decoration:none;font-weight:700;border-bottom:2.5px so
 .fb .dgw{width:64px;flex:none}
 .fb .tx{flex:1;min-width:0}
 .fb .v{display:block;font-family:var(--ft);font-size:17.5px;font-weight:700;margin-bottom:4px}
+.fb .v{color:var(--ok)}
 .fb.no .v{color:var(--red)}
 .fb .why{font-size:15.5px;line-height:1.45}
 .it-text .pickres{display:block;margin-top:10px}
@@ -183,7 +187,7 @@ body[data-view="les"] #app{display:flex;flex-direction:column;min-height:calc(10
 .board .pen{animation-name:sweepu}
 @keyframes sweepu{from{background-size:0 2.5px}}
 @keyframes fadein{from{opacity:0}}
-.opt.right{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red);opacity:1}
+.opt.right{border-color:var(--ok);box-shadow:inset 0 0 0 1px var(--ok);opacity:1}
 .opt.wrong{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2.5px;color:var(--mut);opacity:1}
 .opt.dim{opacity:.5}
 .opt:disabled{cursor:default}
@@ -197,12 +201,14 @@ body[data-view="les"] #app{display:flex;flex-direction:column;min-height:calc(10
 .dlg-more{display:inline-block;margin-left:8px;font-size:11px;animation:bob 1s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(3px)}}
 /* Ergebnis */
-.grade{font-family:var(--ft);font-style:italic;font-weight:700;color:var(--red);font-size:64px;line-height:1;margin:10px 0 12px;display:inline-block;transform:rotate(-3deg);position:relative;padding-bottom:8px}
+.grade{font-family:var(--ft);font-style:italic;font-weight:700;color:var(--ok);font-size:64px;line-height:1;margin:10px 0 12px;display:inline-block;transform:rotate(-3deg);position:relative;padding-bottom:8px}
+.grade.lo{color:var(--red)}
 .grade svg{position:absolute;left:-2px;bottom:0;width:calc(100% + 8px);height:8px}
 .resline{font-size:16.5px;margin-bottom:18px}
 .sub{font-family:var(--ft);font-size:20px;font-weight:700;margin:26px 0 8px}
 .corr{font-family:var(--ft);font-size:17.5px;line-height:1.5;border-top:1px solid var(--ln);padding:10px 0}
 .corr small{display:block;font-family:var(--fu);color:var(--mut);font-size:14px;margin-top:2px}
+.psum h3{font-family:var(--fu);font-size:15px;font-weight:700;color:var(--mut);margin:18px 0 2px}
 .won{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;margin:18px 0 4px;padding:12px 0;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
 .won b{display:block;font-family:var(--ft);font-size:19px}
 .won p{font-family:var(--ft);font-style:italic;font-size:16.5px;margin-top:4px}
@@ -264,7 +270,11 @@ summary{padding:10px 0;cursor:pointer}
 }
 @media (max-width:420px){.opts.two{grid-template-columns:1fr}.xp{padding-left:8px}.kv b{font-size:24px}
   .pinned{padding:2px 14px 6px}.pinned .cl{padding:8px 0}.pinned .cl .cr{font-size:17.5px}.pinned .cl .board p{font-size:19px}.pinned .cl .board.cn p{font-size:15.5px}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* Konfetti bei 100 % (Paul, 12. Oktober 2026): nur CSS, kein Ton, fängt keine Tipps ab, aus bei reduzierter Bewegung */
+.cf{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:60}
+.cf i{position:absolute;top:-24px;width:9px;height:14px;border-radius:2px;opacity:.95;animation:cf var(--t,2.6s) cubic-bezier(.3,.6,.5,1) var(--d,0s) forwards}
+@keyframes cf{to{transform:translate(var(--x,0),calc(100vh + 60px)) rotate(var(--r,540deg));opacity:.85}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.cf{display:none}}
 </style>
 </head>
 <body>
@@ -282,7 +292,7 @@ const CONFIG = {
   TEACHER_PIN: "2580"
 };
 /* ======================================================= */
-const SITE = "Grammar Training", BUILD = "2026-10-10b";
+const SITE = "Grammar Training", BUILD = "2026-10-12a";
 const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":true},{"id":"ar","name":"Articles and quantifiers","on":true},{"id":"pv","name":"Passive","on":true},{"id":"de","name":"German mistakes","on":true},{"id":"rc","name":"Relative clauses","on":true},{"id":"ca","name":"Capitals and apostrophes","on":true},{"id":"rs","name":"Reported speech","on":true},{"id":"rg","name":"Formal or informal","on":true}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
 
 /* ===== FIGUREN START (Quelle: figuren.js) ===== */
@@ -484,9 +494,10 @@ function nextStep(U,has){
     if(lv.r){const m=les(L,lv.r).find(x=>ls[x-1]===2);return m?{k:'les',L,n:lv.r,m}:{k:'set',L,n:lv.r};}
     // neue Sets: erst die Mini-Lektionen mit Check, dann das Set
     for(let n=1;n<=NSET;n++)if(lv.s[n-1]===0){const m=les(L,n).find(x=>ls[x-1]!==1);return m?{k:'les',L,n,m}:{k:'set',L,n};}
-    // Sets unter 80 % bekommen eine zweite Runde, das schwächste zuerst
-    let w=0; const a=lv.a||[0,0];
-    for(let n=1;n<=NSET;n++)if(lv.s[n-1]<3&&a[n-1]<2&&(!w||lv.p[n-1]<lv.p[w-1]))w=n;
+    // Sets unter 80 % kommen wieder, das schwächste zuerst, so oft wie nötig. Der Checkpoint kommt erst, wenn beide Sets 80 % haben
+    // (Paul, 12. Oktober 2026: kein Ausweg nach zwei Runden, „sie sollen es ja wirklich lernen“)
+    let w=0;
+    for(let n=1;n<=NSET;n++)if(lv.s[n-1]<3&&(!w||lv.p[n-1]<lv.p[w-1]))w=n;
     if(w)return {k:'set',L,n:w};
     return {k:'cp',L};
   }
@@ -497,6 +508,15 @@ function setLocked(U,L,n,has){
   const ms=(has&&has[L]&&has[L][n-1])||[]; if(!ms.length)return false;
   if(U&&U.st&&LVS.indexOf(U.st)>LVS.indexOf(L))return false;
   return !U||ms.some(x=>!(U.lv[L].l||[])[x-1]);
+}
+// Checkpoint gesperrt? Er öffnet sich erst, wenn beide Sets der Stufe 80 % erreicht haben (Paul, 12. Oktober 2026).
+// Frei bleiben: per Einstufung übersprungene Stufen, ein bestandener Checkpoint und der Advanced-Checkpoint nach 4 von 4 in der Einstufung (Test-out) vor dem ersten Versuch.
+function cpLocked(U,L){
+  if(!U||!U.st)return true;
+  const lv=U.lv[L];
+  if(lv.c[1]||LVS.indexOf(U.st)>LVS.indexOf(L))return false;
+  if(U.to&&L==='p'&&lv.c[0]===0)return false;
+  return lv.s.some(x=>x<3);
 }
 // Schwächstes Set einer Stufe (nach dem besten Ergebnis)
 function weakSet(lv){let w=1;for(let k=2;k<=NSET;k++)if(lv.p[k-1]<lv.p[w-1])w=k;return w;}
@@ -564,7 +584,7 @@ const SAY = {
   set3: ["Well done, that set is finished. Those sentences will think twice before they come back.",
     "That\u2019s a pass and a comfortable one. On to the next step.",
     "Nicely done. I was thrown across the room twice today, so this set was the calm part."],
-  set2: ["Almost there. Round two has fresh sentences and this time you know their tricks.",
+  set2: ["Almost there. The next round has fresh sentences and this time you know their tricks.",
     "That was close. Have a look at the corrections, then one more round should do it.",
     "A solid start. The rule card and one more round will take you over 80%."],
   set1: ["That was a tough round. It happens to everyone, so read the corrections and give it another go.",
@@ -676,6 +696,7 @@ function wearNow(){const o=wearOpts();if(o.some(x=>x[0]===S.wear))return S.wear;
 
 /* ---------- Durchlauf starten ---------- */
 function start(kind,uid,L,n,preview){
+  if(kind==='cp'&&!preview&&cpLocked(getU(uid),L))return toast('The checkpoint opens when both sets have 80%.');
   let items, title;
   if(kind==='place'){items=pool(uid,'e');title='Placement test';}
   else if(kind==='warm'){items=warmPool();title='Warm-up';uid=null;}
@@ -699,9 +720,11 @@ function pm(L,x,sz){ // Stiftmarke: Form der Stufe, darüber Haken (2, 3), Gold-
   const t=x===2||x===3?'<path class="t" d="M6.5 12.500l4.200 5.200L21.500 3"/>':x===4?'<path class="g" d="M6.5 12.500l4.200 5.200L21.500 3"/>':x===1?'<path class="t" d="M8 16L16 8"/>':'';
   return '<svg class="pm" viewBox="0 0 24 24" width="'+(sz||24)+'" height="'+(sz||24)+'" aria-hidden="true">'+o+t+'</svg>';
 }
-const TICK=' <svg class="tick" viewBox="0 0 24 24" width="22" height="22" role="img" aria-label="correct"><path d="M4 13l5 6L21 3" fill="none" stroke="var(--red)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const squigC=squig.replace('var(--red)','currentColor');   // Kringel unter der Note: grün ab 80 %, sonst rot
+const TICK=' <svg class="tick" viewBox="0 0 24 24" width="22" height="22" role="img" aria-label="correct"><path d="M4 13l5 6L21 3" fill="none" stroke="var(--ok)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const LOCK='<svg class="lock" viewBox="0 0 24 24" width="20" height="20" role="img" aria-label="locked"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 11V8a3.500 3.500 0 0 1 7 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 const MARKWORD=['not started','started','done','shown in the placement test','done'];
-const NDTICK='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12.500l4.500 5.500L20 4" fill="none" stroke="var(--red)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const NDTICK='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12.500l4.500 5.500L20 4" fill="none" stroke="var(--ok)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 /* ---------- Darstellung eines Items ---------- */
 function splitSrc(x){const k=x.indexOf(' \u2192 ');return k<0?['',x]:[x.slice(0,k),x.slice(k+3)];}
@@ -720,7 +743,8 @@ function itemHTML(it,st){ // st: {inputs:[], disabled}
 function solvedHTML(it,res){ // korrigierter Satz mit Korrekturzeichen
   const [,txt]=splitSrc(it.x);
   if(it.t==='fix'){
-    return esc(txt).replace(/\*(.+?)\*/,(m,w)=>it.h[0]==='OK'?'<mark class="ok">'+w+'</mark>'+TICK:'<del>'+w+'</del> <ins>'+esc(it.h[0])+'</ins>');
+    return esc(txt).replace(/\*(.+?)\*/,(m,w)=>it.h[0]!=='OK'?'<del>'+w+'</del> <ins>'+esc(it.h[0])+'</ins>':
+      res&&res.ok===false?'<del>'+esc((res.given||[])[0]||'\u2013')+'</del> <ins>'+w+'</ins>':'<mark class="ok">'+w+'</mark>'+TICK);   // ohne Fehler, aber etwas getippt: das Getippte rot durchgestrichen
   }
   if(it.t==='mc'){
     if(txt.indexOf('___')<0)return res.ok?'<mark class="ok">'+esc(it.c)+'</mark>':'<del>'+esc(res.given||'')+'</del><br><ins>'+esc(it.c)+'</ins>';
@@ -748,6 +772,7 @@ function taskLine(it){
 /* ---------- Ansichten ---------- */
 function render(keep){
   const a=$('#app'), y=window.scrollY; document.body.dataset.view=view;
+  const cf=$('.cf'); if(cf&&!(view==='run'&&run&&run.i>=run.items.length))cf.remove();   // Konfetti nur auf der Ergebnisseite
   if(view==='home')a.innerHTML=homeHTML();
   else if(view==='path')a.innerHTML=pathHTML();
   else if(view==='run')a.innerHTML=run.i>=run.items.length?endHTML():runHTML();
@@ -758,6 +783,7 @@ function render(keep){
   else if(view==='err')a.innerHTML='<h1 class="h1">This did not load</h1><p class="txt">Check your connection and load the page again. Your progress is safe.</p><div class="acts"><button class="btn" data-act="reload">Load again</button></div>';
   else a.innerHTML='';
   window.scrollTo(0,keep?y:0);
+  if(view==='run'&&run&&run.party){run.party=false;confetti();}
   const inp=a.querySelector('.it-text input:not([disabled]),.fixin input:not([disabled])'); if(inp&&run&&run.phase!=='fb')inp.focus({preventScroll:true});
   if(view==='les'){const d=a.querySelector('.dlg-in');document.documentElement.style.setProperty('--dlgh',(d?d.offsetHeight:200)+'px');typeOut();}else{clearInterval(typeT);typeT=null;}
 }
@@ -813,21 +839,24 @@ function defaultSel(uid){const U=getU(uid);if(!U.st)return 'place';const ns=step
 function pathHTML(){
   const id=vs.unit, D=UNIT[id], U=getU(id), st=stations(id), ns=stepOf(id), stIx=U.st?LVS.indexOf(U.st):-1;
   const row=n=>{
-    const open=vs.sel===n.i, lv=U.lv[n.L], ls=lv.l||[], ms=n.cp?[]:D.has[n.L][n.n-1], lock=!n.cp&&setLocked(U,n.L,n.n,D.has);
+    const open=vs.sel===n.i, lv=U.lv[n.L], ls=lv.l||[], ms=n.cp?[]:D.has[n.L][n.n-1], lock=!n.cp&&setLocked(U,n.L,n.n,D.has), shut=n.cp&&cpLocked(U,n.L);
     const todo=ms.filter(m=>!ls[m-1]), again=ms.filter(m=>ls[m-1]===2), nm=lock?todo[0]:again[0];   // nm = Lektion, die als Nächstes dran ist
     const at=' data-l="'+n.L+'" data-n="'+n.n+'"', lat=m=>at+' data-m="'+m+'"', best=n.best!==null?' Best so far: '+n.best+'%.':'';
     const lname=m=>(ms.length>1?'Lesson '+(ms.indexOf(m)+1)+' of '+ms.length:'Lesson')+': \u201C'+D.lessons[n.L+m].t+'\u201D.';
     let body='';
-    if(open&&n.cp)body='<p class="cq">'+esc(SAY.cpGo[(n.ix+lv.c[0])%SAY.cpGo.length])+'</p><p>10 items, no second tries. You pass with 80%.'+best+'</p><button class="btn" data-act="start" data-k="cp"'+at+'>Start checkpoint</button>';
+    if(open&&shut){   // Checkpoint gesperrt: welches Set fehlt noch?
+      const miss=D.sets[n.L].map((x,k)=>lv.s[k]<3?'\u201C'+esc(x.n)+'\u201D'+(lv.s[k]?' (best so far '+lv.p[k]+'%)':' (not started yet)'):'').filter(Boolean);
+      body='<p>The checkpoint opens when both sets of '+LV[n.L].n+' have 80% or more.'+best+'</p><p>Still to do: '+miss.join(' and ')+'.</p>';}
+    else if(open&&n.cp)body='<p class="cq">'+esc(SAY.cpGo[(n.ix+lv.c[0])%SAY.cpGo.length])+'</p><p>10 items, no second tries. You pass with 80%.'+best+'</p><button class="btn" data-act="start" data-k="cp"'+at+'>Start checkpoint</button>';
     else if(open&&lock)body='<p><b>'+esc(lname(nm))+'</b> Doggo explains one rule in about a minute. Get his two questions right and '+(todo.length>1?'the next lesson opens.':'the set opens: 10 items, about 6 minutes.')+'</p>'+
       '<div class="xb"><button class="btn" data-act="lesson"'+lat(nm)+'>Start lesson</button><button class="btn sec" data-act="lesson" data-skip="1"'+lat(nm)+'>I know this</button></div>';
     else if(open)body='<p>'+(again.length?'Doggo recommends his lesson'+(again.length>1?'s':'')+' again before the next round. ':'')+'10 items, about 6 minutes.'+(best||(n.x===3?' Shown in the placement test. Open it anyway if you like.':' Not started yet.'))+'</p><div class="xb">'+
       (again.length?'<button class="btn" data-act="lesson"'+lat(nm)+'>Start lesson</button><button class="btn sec" data-act="start" data-k="set"'+at+'>Start set</button>'
         :'<button class="btn" data-act="start" data-k="set"'+at+'>'+(n.best===null?'Start set':'Practise again')+'</button>'+ms.map((m,k)=>'<button class="lk" data-act="lesson"'+lat(m)+'>'+(ms.length>1?'Watch lesson '+(k+1):'Watch the lesson')+(ls[m-1]?' again':'')+'</button>').join(''))+'</div>';
-    return '<li class="'+(n.next?'nx':'')+'"><button class="rw" data-act="sel" data-i="'+n.i+'" aria-expanded="'+open+'">'+pm(n.ix,n.x,28)+
+    return '<li class="'+(n.next?'nx':shut?'shut':'')+'"><button class="rw" data-act="sel" data-i="'+n.i+'" aria-expanded="'+open+'">'+pm(n.ix,n.x,28)+
       '<span class="nm">'+(n.next?'<span class="hl">'+esc(n.name)+'</span>':esc(n.name))+'</span>'+
       (n.cp&&n.L===ns.L?'<span class="mini">'+dogga('stern')+'</span>':n.next&&ns.k==='les'?'<span class="mini">'+doggo('none','ok')+'</span>':'')+
-      '<span class="sc'+(n.best===null?' no':'')+'">'+(n.best!==null?n.best+'%':n.next?'next':'')+'</span></button>'+
+      '<span class="sc'+(shut||n.best===null?' no':n.best<80?' lo':'')+'">'+(shut?LOCK:n.best!==null?n.best+'%':n.next?'next':'')+'</span></button>'+
       (open?'<div class="xp">'+body+'</div>':'')+'</li>';
   };
   let h='<header class="ph"><button class="lk" data-act="home">'+IC.back+'All topics</button><button class="lk" data-act="rules" data-u="'+id+'">Rule card</button></header>'+
@@ -998,24 +1027,29 @@ function corrHTML(){
   const wrong=run.res.filter(r=>!r.ok||r.pts<1); if(!wrong.length)return '';
   return '<h2 class="sub">Corrections</h2>'+wrong.map(r=>{const it=BY[r.id];return '<div class="corr">'+solvedHTML(it,r)+(whyOf(it)?'<small>'+esc(whyOf(it))+'</small>':'')+'</div>';}).join('');
 }
+function placeSumHTML(){ // Zusammenfassung der Einstufung (Paul, 12. Oktober 2026): alle 12 Items nach Stufe, richtig mit Haken, falsch rot durchgestrichen mit der richtigen Form
+  const o=run.out;
+  return '<h2 class="sub">Your answers</h2><div class="psum">'+LVS.map((L,i)=>'<h3>'+LV[L].sym+' '+LV[L].n+': '+o.pl[i]+' of 4 right</h3>'+
+    run.res.slice(i*4,i*4+4).map(r=>{const it=BY[r.id];return '<div class="corr">'+solvedHTML(it,r)+(r.ok&&!(it.t==='fix'&&it.h[0]==='OK')?TICK:'')+'</div>';}).join('')).join('')+'</div>';
+}
 function endHTML(){
   const n=run.items.length, pct=Math.round(run.pts/n*100), back=run.preview?'Zur\u00FCck zur Lehreransicht':'Back to the path'; let h='';
   if(run.preview)h+='<div class="banner">Vorschau: nichts wurde gespeichert.</div>';
   if(run.kind==='place'){
-    const o=run.out;
+    const o=run.out, go='<div class="acts"><button class="btn" data-act="topath">'+(run.preview?back:'Go to the path')+'</button></div>';
     return h+'<h1 class="h1">You start at '+LV[o.st].sym+' '+LV[o.st].n+'</h1><div class="coach"><div>'+doggo(wearNow())+'</div><p>'+esc(SAY.place)+'</p></div>'+
-      '<p class="txt">Right answers: '+LVS.map((L,i)=>LV[L].n+' '+o.pl[i]+' of 4').join(', ')+'.'+(o.to?' You go straight to the '+LV.p.n+' checkpoint.':'')+'</p>'+wonHTML()+
-      '<div class="acts"><button class="btn" data-act="topath">'+(run.preview?back:'Go to the path')+'</button></div>';
+      '<p class="txt">Right answers: '+LVS.map((L,i)=>LV[L].n+' '+o.pl[i]+' of 4').join(', ')+'.'+(o.to?' You go straight to the '+LV.p.n+' checkpoint.':'')+'</p>'+wonHTML()+go+placeSumHTML()+go;
   }
   if(run.kind==='warm'){
     return h+'<h1 class="h1">Warm-up done</h1><div class="coach"><div>'+doggo(wearNow())+'</div><p>'+esc(SAY.warm)+'</p></div><p class="txt">'+run.res.filter(r=>r.ok&&r.pts===1).length+' of '+n+' right first time.</p>'+corrHTML()+
       '<div class="acts"><button class="btn" data-act="home">Continue</button></div>';
   }
   const U=getU(run.uid);
-  h+='<p class="mute">'+esc(run.title)+'</p><div class="grade">'+pct+'%'+squig+'</div>';
+  h+='<p class="mute">'+esc(run.title)+'</p><div class="grade'+(pct<80?' lo':'')+'">'+pct+'%'+squigC+'</div>';
   if(run.kind==='set'){
-    const s=statusFor(pct);
-    h+='<p class="resline">'+(s===3?'This set is done.':s===2?'Almost. 80% completes the set.':'Not there yet. Open the rule card and try again.')+'</p>'+
+    const s=statusFor(pct), lv=U.lv[run.L];   // Hinweis auf den Checkpoint der Stufe (gesperrt bis beide Sets 80 % haben)
+    const cpt=run.preview||lv.c[1]?'':cpLocked(U,run.L)?(s===3?' The checkpoint opens when the other set has 80% too.':' The checkpoint opens when both sets have 80%.'):' The '+LV[run.L].n+' checkpoint is open.';
+    h+='<p class="resline">'+(s===3?'This set is done.':s===2?'Almost. 80% completes the set.':'Not there yet. Open the rule card and try again.')+cpt+'</p>'+
       '<div class="coach"><div>'+doggo('none',pct===100?'surprised':s===3?'happy':s===2?'ok':'dry')+'</div><p>'+esc(run.endLine)+'</p></div>';
   }else{
     const pass=pct>=80, lv=U.lv[run.L], ws=lv.r||1, ag=run.preview?0:lesList(run.uid,run.L,ws).filter(m=>(lv.l||[])[m-1]===2).length;
@@ -1060,7 +1094,8 @@ function lvLine(x,i){
   const st=LVS.indexOf(x.st), l=x.lv[i], sym=LV[LVS[i]].sym+' ';
   if(st<0)return sym+'nicht eingestuft';
   if(i<st&&!l[2][1])return sym+'<span class="mute">per Einstufung</span>';
-  return sym+l[0].filter(s=>s===3).length+'/'+NSET+' Sets, '+(l[2][1]?'Checkpoint bestanden ('+l[2][2]+'%)':l[2][0]?'<span class="flag">Checkpoint '+l[2][0]+'\u00D7 nicht bestanden</span>':'Checkpoint offen');
+  const shut=l[0].some(s=>s<3)&&!(x.to&&i===2&&!l[2][0]);   // gesperrt, bis beide Sets 80 % haben (seit 12. Oktober 2026)
+  return sym+l[0].filter(s=>s===3).length+'/'+NSET+' Sets, '+(l[2][1]?'Checkpoint bestanden ('+l[2][2]+'%)':l[2][0]?'<span class="flag">Checkpoint '+l[2][0]+'\u00D7 nicht bestanden</span>':shut?'Checkpoint gesperrt':'Checkpoint offen');
 }
 function teacherHTML(){
   if(!tView.ok)return '<h1 class="h1">Lehreransicht</h1><p class="txt">PIN eingeben.</p><div class="acts"><input class="pin" type="password" inputmode="numeric" id="pin" autocomplete="off" aria-label="PIN"><button class="btn" data-act="pin">\u00D6ffnen</button></div><p class="warn" id="pinmsg"></p><div class="acts"><button class="btn sec" data-act="home">Zur\u00FCck</button></div>';
@@ -1080,7 +1115,7 @@ function teacherHTML(){
         if(!r.o){h+='<tr><td>'+esc(r.who)+'</td><td colspan="8" class="flag">Code unlesbar</td></tr>';return;}
         const o=r.o, q=o.q&&o.q[1]?Math.round(o.q[0]/o.q[1]*100):null, flags=[], uids=Object.keys(o.u), errs=[];
         uids.forEach(uid=>{const x=o.u[uid];
-          x.lv.forEach(l=>{if(l[2][0]>=2&&!l[2][1])flags.push('steckt fest');});
+          x.lv.forEach((l,i)=>{if(!l[2][1]&&(l[2][0]>=2||(i>=LVS.indexOf(x.st)&&(l[4]||[]).some((a,k)=>a>=3&&l[0][k]<3))))flags.push('steckt fest');});   // zwei Checkpoints nicht bestanden oder ein Set nach drei Runden unter 80 %
           if(q!==null&&q>=95&&o.q[1]>=30&&x.st&&x.st!=='p')flags.push('unterfordert');
           Object.keys(x.e||{}).forEach(k=>{if(x.e[k][0]>0)errs.push([x.e[k][0],tagName(uid,k)]);});});
         if(o.d&&(Date.now()-new Date(o.d).getTime())/864e5>14)flags.push('\u00FCber 14 Tage inaktiv');
@@ -1173,6 +1208,7 @@ function closeRun(){
     if(!run.preview){const U=touchU(run.uid),e0=earned(U);U.pl=pl;U.st=o.st;U.to=o.to;costume(U,e0);week();save();}
     return;
   }
+  if((run.kind==='set'||run.kind==='cp')&&pct===100)run.party=true;   // Konfetti beim Ergebnis
   if(run.kind==='set'){const s=statusFor(pct);run.endLine=pct===100?pickLine('perfect',SAY.perfect):pickLine('set'+s,SAY['set'+s]);}
   else if(run.kind==='cp')run.endLine=pct>=80?pickLine('cpPass',SAY.cpPass):pickLine('cpFail',SAY.cpFail);
   if(run.preview)return;
@@ -1184,6 +1220,16 @@ function closeRun(){
     else{const w=weakSet(lv);lv.r=w;if(lv.c[0]===1){if(!Array.isArray(lv.l))lv.l=[0,0,0,0];lesList(run.uid,run.L,w).forEach(m=>{lv.l[m-1]=2;});}}   // beim ersten Fehlschlag: Lektionen des schwächsten Sets noch einmal
   }
   costume(U,e0); week(); save();
+}
+
+/* ---------- Konfetti bei 100 % in einem Set oder Checkpoint (Paul, 12. Oktober 2026). Ohne Ton, verschwindet nach fünf Sekunden, aus bei reduzierter Bewegung. ---------- */
+function confetti(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const old=$('.cf'); if(old)old.remove();
+  const c=document.createElement('div'), cols=['#E5483F','#3D63E0','#FFD23F','#2E9E50','#E2A600'], r=(a,b)=>a+Math.random()*(b-a); let h='';
+  for(let i=0;i<70;i++){const w=r(6,11);
+    h+='<i style="left:'+r(0,100).toFixed(1)+'%;width:'+w.toFixed(0)+'px;height:'+(w*1.5).toFixed(0)+'px;background:'+cols[i%5]+';--x:'+r(-80,80).toFixed(0)+'px;--r:'+r(-720,720).toFixed(0)+'deg;--t:'+r(2.2,3.6).toFixed(2)+'s;--d:'+r(0,.7).toFixed(2)+'s"></i>';}
+  c.className='cf'; c.setAttribute('aria-hidden','true'); c.innerHTML=h; document.body.appendChild(c); setTimeout(()=>c.remove(),5000);
 }
 
 /* ---------- Bedienung ---------- */
