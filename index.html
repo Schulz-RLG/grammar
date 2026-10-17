@@ -91,6 +91,8 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .foot{margin-top:40px;padding-top:16px;border-top:1.5px solid var(--ink);display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:14px;color:var(--mut)}
 .foot .sp{flex:1}
 .warn{margin-top:12px;font-size:14px;color:var(--red)}
+.tip{border:1.5px solid var(--ink);border-radius:var(--r);background:var(--sf);padding:10px 14px 12px;margin:-8px 0 20px;font-size:15px;line-height:1.45}
+.tip b{display:block;font-family:var(--ft);font-size:18px;margin-bottom:3px}
 
 /* Pfad */
 .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -105,7 +107,7 @@ body[data-view="teacher"] .wrap{max-width:1000px}
 .rw{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:8px 4px;border:0;background:transparent;text-align:left}
 .rw .nm{flex:1;font-family:var(--ft);font-size:18.5px;line-height:1.3}
 .rw .sc{font-family:var(--ft);font-style:italic;font-size:18px;color:var(--ok);flex:none}
-.rw .sc.lo{color:var(--red)}   /* bestes Ergebnis unter 80 % */
+.rw .sc.lo{color:var(--red)}   /* bestes Ergebnis unter 90 % */
 .rw .sc .lock{vertical-align:-3px}
 .rw .sc.no{color:var(--mut);font-style:normal;font-size:14px;font-family:var(--fu)}
 .rows li.nx .nm{font-weight:700}
@@ -191,6 +193,7 @@ body[data-view="les"] #app{display:flex;flex-direction:column;min-height:calc(10
 .opt.wrong{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2.5px;color:var(--mut);opacity:1}
 .opt.dim{opacity:.5}
 .opt:disabled{cursor:default}
+.nw{white-space:nowrap}
 .dlg{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:0 12px calc(14px + env(safe-area-inset-bottom,0px));pointer-events:none}
 .dlg-in{pointer-events:auto;cursor:pointer;position:relative;max-width:660px;margin:0 auto;background:var(--sf);border:2px solid var(--ink);border-radius:4px;box-shadow:5px 5px 0 var(--ink);padding:20px 16px 8px}
 .dlg-fig{position:absolute;left:6px;bottom:100%;width:96px;margin-bottom:-10px;pointer-events:none}
@@ -269,8 +272,11 @@ summary{padding:10px 0;cursor:pointer}
   .dlg{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:420px){.opts.two{grid-template-columns:1fr}.xp{padding-left:8px}.kv b{font-size:24px}
-  .pinned{padding:2px 14px 6px}.pinned .cl{padding:8px 0}.pinned .cl .cr{font-size:17.5px}.pinned .cl .board p{font-size:19px}.pinned .cl .board.cn p{font-size:15.5px}}
-/* Konfetti bei 100 % (Paul, 12. Oktober 2026): nur CSS, kein Ton, fängt keine Tipps ab, aus bei reduzierter Bewegung */
+  .pinned{padding:2px 14px 6px}.pinned .cl{padding:8px 0}.pinned .cl .cr{font-size:17.5px}.pinned .cl .board p{font-size:19px}.pinned .cl .board.cn p{font-size:15.5px}
+  /* Fragen in der Lektion auf dem Handy etwas kompakter, damit Doggo die dritte Antwort nicht verdeckt (seit 16. Oktober 2026: alle Antworten der Warum-Fragen gleich lang) */
+  .stage.q{padding-top:0}.stage.q .board p{font-size:22px;line-height:1.4;margin-bottom:.3em}.stage.q .opts{margin-top:10px;gap:8px}
+  .stage.q .opt{font-size:18px;line-height:1.3;padding:7px 12px;min-height:46px}.dlg.q .dlg-tx p{min-height:2.9em}}
+/* Konfetti bei 100 % in einem Set und bei jedem bestandenen Checkpoint: nur CSS, kein Ton, fängt keine Tipps ab, aus bei reduzierter Bewegung */
 .cf{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:60}
 .cf i{position:absolute;top:-24px;width:9px;height:14px;border-radius:2px;opacity:.95;animation:cf var(--t,2.6s) cubic-bezier(.3,.6,.5,1) var(--d,0s) forwards}
 @keyframes cf{to{transform:translate(var(--x,0),calc(100vh + 60px)) rotate(var(--r,540deg));opacity:.85}}
@@ -289,10 +295,13 @@ const CONFIG = {
   // Vorausgefüllter Link des Google-Formulars. Im Link muss an der Stelle der Antwort das Wort CODE stehen.
   FORM_PREFILL: "",
   // PIN für die Lehreransicht
-  TEACHER_PIN: "2580"
+  TEACHER_PIN: "2580",
+  // Einstufung (Placement test) am Anfang jedes Bausteins: false = aus, jeder Baustein beginnt bei Basic (Paul, 16. Oktober 2026). true = wieder an.
+  // Alte Ergebnisse der Einstufung bleiben in beiden Fällen gültig.
+  PLACEMENT: false
 };
 /* ======================================================= */
-const SITE = "Grammar Training", BUILD = "2026-10-12a";
+const SITE = "Grammar Training", BUILD = "2026-10-16a";
 const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":true},{"id":"ar","name":"Articles and quantifiers","on":true},{"id":"pv","name":"Passive","on":true},{"id":"de","name":"German mistakes","on":true},{"id":"rc","name":"Relative clauses","on":true},{"id":"ca","name":"Capitals and apostrophes","on":true},{"id":"rs","name":"Reported speech","on":true},{"id":"rg","name":"Formal or informal","on":true}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
 
 /* ===== FIGUREN START (Quelle: figuren.js) ===== */
@@ -445,6 +454,7 @@ function stateFromCode(o){
     U.tags=x.e||{};
     unpackBits(x.h||'',NPOS).forEach((b,p)=>{if(b)S.it[id+'.'+idAt(p)]=b;});
   });
+  upgradeSets(S.units);
   S.sess={n:o.n||0,sec:(o.m||0)*60,last:o.d||null,items:o.q?o.q[1]:0,right:o.q?o.q[0]:0};
   if(o.wk)S.wk={last:o.wk[0]||null,run:o.wk[1]||0,best:o.wk[2]||0,day:null};
   S.wear=o.c||'none';S.cur=o.k||null;
@@ -455,7 +465,17 @@ function placeLevel(pl){ // pl = [richtig ●, richtig ■, richtig ▲], je von
   if(pl[1]<3)return {st:'k',to:false};
   return {st:'p',to:pl[2]===4};
 }
-function statusFor(pct){return pct>=80?3:pct>=50?2:1;}
+// Ein Set gilt ab 90 % als geschafft, ein Checkpoint ist ab 90 % bestanden (Paul, 16. Oktober 2026, vorher 80 %). 50 bis 89 %: „Almost“.
+const PASS = 90;
+function statusFor(pct){return pct>=PASS?3:pct>=50?2:1;}
+// Stände von vor dem 16. Oktober 2026: Sets mit 80 bis 89 % gelten wieder als offen (Status 2). Bestandene Checkpoints bleiben bestanden.
+// Läuft bei jedem Laden und Wiederherstellen, ändert nur den Status, nicht das Speicherformat. Mehrfach anwenden schadet nicht.
+function upgradeSets(units){
+  Object.keys(units||{}).forEach(id=>{const U=units[id];if(!U||!U.lv)return;
+    LVS.forEach(L=>{const l=U.lv[L];if(l&&Array.isArray(l.s))l.s=l.s.map((s,k)=>s===3&&(l.p[k]||0)<PASS?2:s);});});
+  return units;
+}
+const setDone=(s,p)=>s===3&&p>=PASS;   // für Codes in der Lehreransicht (Rohdaten)
 // „Continue“ (Pauls Entscheidung vom 6. Oktober 2026): Der Pflichtteil eines Bausteins endet mit dem Intermediate-Checkpoint, Advanced ist freiwillig.
 function coreDone(U){return !!(U&&U.st)&&(U.st==='p'||!!U.lv.k.c[1]);}   // Basic und Intermediate geschafft oder per Einstufung gezeigt
 function advOpen(U){return coreDone(U)&&!U.lv.p.c[1];}                    // Advanced ist noch nicht geschafft
@@ -494,8 +514,8 @@ function nextStep(U,has){
     if(lv.r){const m=les(L,lv.r).find(x=>ls[x-1]===2);return m?{k:'les',L,n:lv.r,m}:{k:'set',L,n:lv.r};}
     // neue Sets: erst die Mini-Lektionen mit Check, dann das Set
     for(let n=1;n<=NSET;n++)if(lv.s[n-1]===0){const m=les(L,n).find(x=>ls[x-1]!==1);return m?{k:'les',L,n,m}:{k:'set',L,n};}
-    // Sets unter 80 % kommen wieder, das schwächste zuerst, so oft wie nötig. Der Checkpoint kommt erst, wenn beide Sets 80 % haben
-    // (Paul, 12. Oktober 2026: kein Ausweg nach zwei Runden, „sie sollen es ja wirklich lernen“)
+    // Sets unter 90 % kommen wieder, das schwächste zuerst, so oft wie nötig. Der Checkpoint kommt erst, wenn beide Sets 90 % haben
+    // (Paul, 12. Oktober 2026: kein Ausweg nach zwei Runden, „sie sollen es ja wirklich lernen“; seit 16. Oktober 2026 90 % statt 80 %)
     let w=0;
     for(let n=1;n<=NSET;n++)if(lv.s[n-1]<3&&(!w||lv.p[n-1]<lv.p[w-1]))w=n;
     if(w)return {k:'set',L,n:w};
@@ -509,7 +529,7 @@ function setLocked(U,L,n,has){
   if(U&&U.st&&LVS.indexOf(U.st)>LVS.indexOf(L))return false;
   return !U||ms.some(x=>!(U.lv[L].l||[])[x-1]);
 }
-// Checkpoint gesperrt? Er öffnet sich erst, wenn beide Sets der Stufe 80 % erreicht haben (Paul, 12. Oktober 2026).
+// Checkpoint gesperrt? Er öffnet sich erst, wenn beide Sets der Stufe 90 % erreicht haben (Paul, 12. Oktober 2026, seit 16. Oktober 2026 90 %).
 // Frei bleiben: per Einstufung übersprungene Stufen, ein bestandener Checkpoint und der Advanced-Checkpoint nach 4 von 4 in der Einstufung (Test-out) vor dem ersten Versuch.
 function cpLocked(U,L){
   if(!U||!U.st)return true;
@@ -541,6 +561,7 @@ function levelMark(U,i){
 /* ---------- Doggos und Doggas Sprüche: freundlich, in ganzen Sätzen, keine Slogans (Regeln in der Bauanleitung, Abschnitt 5) ---------- */
 const SAY = {
   first: "Hi, nice to see you! Let\u2019s start with twelve quick questions, so you only practise what you really need.",
+  firstNoPl: "Hi, nice to see you! I\u2019ll explain one small rule first and then you can try it out on ten sentences.",   // Einstufung aus (seit 16. Oktober 2026)
   back: "Welcome back! The verbs kept asking where you were, so it\u2019s nice to finally have an answer.",
   home: ["Good to see you. Ten sentences have been looking forward to this all day.",
     "Nice to have you back. I\u2019ve saved you a set that looks harder than it is.",
@@ -586,7 +607,7 @@ const SAY = {
     "Nicely done. I was thrown across the room twice today, so this set was the calm part."],
   set2: ["Almost there. The next round has fresh sentences and this time you know their tricks.",
     "That was close. Have a look at the corrections, then one more round should do it.",
-    "A solid start. The rule card and one more round will take you over 80%."],
+    "A solid start. The rule card and one more round will get you to 90%."],
   set1: ["That was a tough round. It happens to everyone, so read the corrections and give it another go.",
     "This set put up a fight. The rule card is one tap away and the next round will feel different.",
     "Not your round, but a useful one. The corrections below show exactly what to look out for."],
@@ -594,7 +615,7 @@ const SAY = {
   warm: "Nicely warmed up. Now for today\u2019s new sentences.",
   done: "You\u2019ve finished this topic. Play any set again and you\u2019ll get fresh sentences.",
   cpGo: ["Ten sentences and one try for each. I\u2019ve seen your sets, so I know you\u2019re ready.",
-    "You pass with 80%. Read each sentence carefully and you\u2019ll be fine.",
+    "You pass with 90%. Read each sentence carefully and you\u2019ll be fine.",
     "No hints from me this time, but you won\u2019t need them."],
   cpPass: ["You passed and you made it look easy. Congratulations.",
     "That\u2019s a clear pass. I had my red pen ready and hardly used it.",
@@ -632,7 +653,7 @@ const hasLes=uid=>UNIT[uid]?UNIT[uid].has:null;           // Mini-Lektionen je S
 const setName=(uid,L,n)=>UNIT[uid].sets[L][n-1].n;
 const lesList=(uid,L,n)=>UNIT[uid].has[L][n-1];             // Nummern der Mini-Lektionen eines Sets
 const setOfLes=(uid,L,m)=>UNIT[uid].has[L].findIndex(ms=>ms.indexOf(+m)>=0)+1;
-const stepOf=uid=>nextStep(S.units[uid],hasLes(uid));
+const stepOf=uid=>nextStep(getU(uid),hasLes(uid));
 const LV={b:{n:'Basic',sym:'\u25CF'},k:{n:'Intermediate',sym:'\u25A0'},p:{n:'Advanced',sym:'\u25B2'}};   // Namen der Stufen (Paul, 5. Oktober 2026). Die Kürzel b, k, p bleiben in Kennungen und Speicher.
 const pool=(uid,sid)=>UNIT[uid].items.filter(x=>x.s===sid).map(x=>x.id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -641,11 +662,14 @@ const $=s=>document.querySelector(s);
 /* ---------- Speicher ---------- */
 const KEY='gt.v3'; let storeOK=true, S, run=null, les=null, view='load', vs={unit:null,sel:null}, tView={tab:'klasse',ok:false,unit:null}, restoreO=null;
 try{localStorage.setItem(KEY+'.t','1');localStorage.removeItem(KEY+'.t');}catch(e){storeOK=false;}
-function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o&&o.v===3&&o.units)return Object.assign(fresh(),o);}}catch(e){storeOK=false;}return fresh();}
+function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o&&o.v===3&&o.units)return fixState(Object.assign(fresh(),o));}}catch(e){storeOK=false;}return fresh();}
+// Einstufung aus (CONFIG.PLACEMENT): Ein Baustein ohne Ergebnis der Einstufung beginnt bei Basic. Alte Ergebnisse bleiben, wie sie sind.
+function blankU(){const U=newUnit();if(!CONFIG.PLACEMENT)U.st='b';return U;}
+function fixState(T){upgradeSets(T.units);if(!CONFIG.PLACEMENT)Object.keys(T.units).forEach(id=>{const U=T.units[id];if(U&&!U.st){U.st='b';U.to=false;}});return T;}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){storeOK=false;}}
 S=load();
-const getU=id=>S.units[id]||newUnit();                       // nur lesen
-const touchU=id=>S.units[id]||(S.units[id]=newUnit());       // anlegen, sobald etwas gespeichert wird
+const getU=id=>S.units[id]||blankU();                        // nur lesen
+const touchU=id=>S.units[id]||(S.units[id]=blankU());        // anlegen, sobald etwas gespeichert wird
 function dayStr(){return ymd(new Date());}
 function touchDay(){const d=dayStr();if(S.today.d!==d)S.today={d,sec:0,items:0,right:0,warm:false};}
 touchDay();
@@ -683,6 +707,7 @@ function curUnit(){ // Baustein, in dem es weitergeht
 function globalNext(){
   if(S.today.items===0&&!S.today.warm&&warmPool().length>=4)return {k:'warm'};
   const id=curUnit(); if(!id)return {k:'done'};
+  if(!UNIT[id])return {k:'load',unit:id};   // Datei des Bausteins noch nicht geladen (z. B. der nächste Baustein nach dem Pflichtteil): erst laden, dann den Schritt bestimmen
   const ns=stepOf(id); ns.unit=id; return ns;
 }
 
@@ -696,7 +721,7 @@ function wearNow(){const o=wearOpts();if(o.some(x=>x[0]===S.wear))return S.wear;
 
 /* ---------- Durchlauf starten ---------- */
 function start(kind,uid,L,n,preview){
-  if(kind==='cp'&&!preview&&cpLocked(getU(uid),L))return toast('The checkpoint opens when both sets have 80%.');
+  if(kind==='cp'&&!preview&&cpLocked(getU(uid),L))return toast('The checkpoint opens when both sets have 90%.');
   let items, title;
   if(kind==='place'){items=pool(uid,'e');title='Placement test';}
   else if(kind==='warm'){items=warmPool();title='Warm-up';uid=null;}
@@ -720,7 +745,7 @@ function pm(L,x,sz){ // Stiftmarke: Form der Stufe, darüber Haken (2, 3), Gold-
   const t=x===2||x===3?'<path class="t" d="M6.5 12.500l4.200 5.200L21.500 3"/>':x===4?'<path class="g" d="M6.5 12.500l4.200 5.200L21.500 3"/>':x===1?'<path class="t" d="M8 16L16 8"/>':'';
   return '<svg class="pm" viewBox="0 0 24 24" width="'+(sz||24)+'" height="'+(sz||24)+'" aria-hidden="true">'+o+t+'</svg>';
 }
-const squigC=squig.replace('var(--red)','currentColor');   // Kringel unter der Note: grün ab 80 %, sonst rot
+const squigC=squig.replace('var(--red)','currentColor');   // Kringel unter der Note: grün ab 90 %, sonst rot
 const TICK=' <svg class="tick" viewBox="0 0 24 24" width="22" height="22" role="img" aria-label="correct"><path d="M4 13l5 6L21 3" fill="none" stroke="var(--ok)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const LOCK='<svg class="lock" viewBox="0 0 24 24" width="20" height="20" role="img" aria-label="locked"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 11V8a3.500 3.500 0 0 1 7 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 const MARKWORD=['not started','started','done','shown in the placement test','done'];
@@ -789,7 +814,7 @@ function render(keep){
 }
 function homeSay(){
   const d=S.today.d, st=streakNow(S.wk,d), open=S.wk.last!==weekOf(d);
-  if(!S.sess.items&&!Object.keys(S.units).length)return SAY.first;
+  if(!S.sess.items&&!Object.keys(S.units).length)return CONFIG.PLACEMENT?SAY.first:SAY.firstNoPl;
   if(S.today.items===0&&S.sess.last&&(noon(d)-noon(S.sess.last))/864e5>14)return SAY.back;
   if(st>=2&&open)return 'You\u2019re on '+st+' weeks in a row. One session this week keeps the streak going.';
   if(st>=2&&S.wk.day===d)return st>=10?st+' weeks in a row. Grammar practice is officially one of your habits now.':st>=5?st+' weeks in a row. I\u2019m impressed and I don\u2019t say that to everyone.':st+' weeks in a row. Grammar is starting to recognise you.';
@@ -798,6 +823,7 @@ function homeSay(){
 function goLabel(ns){
   const nm=ns.unit?UMETA[ns.unit].name:'';
   if(ns.k==='warm')return ['Warm-up first','A few items from earlier sets, starting with the ones you got wrong.'];
+  if(ns.k==='load')return ['Continue with '+nm,'\u00A0'];
   if(ns.k==='les')return ['Continue with \u201C'+setName(ns.unit,ns.L,ns.n)+'\u201D','First a lesson from Doggo, about a minute. '+LV[ns.L].n+', set '+ns.n+' of '+nm];
   if(ns.k==='place')return ['Start the placement test','12 items, about 6 minutes, no feedback. '+nm];
   if(ns.k==='set')return ['Continue with \u201C'+setName(ns.unit,ns.L,ns.n)+'\u201D',LV[ns.L].n+', set '+ns.n+' of '+nm];
@@ -805,6 +831,7 @@ function goLabel(ns){
 }
 function homeHTML(){
   const ns=globalNext(), st=streakNow(S.wk,S.today.d), wo=wearOpts(), cu=ns.k==='done'?null:curUnit();
+  if(ns.k==='load')loadUnit(ns.unit).then(()=>{if(view==='home')render(true);},fail);   // danach steht der richtige nächste Schritt da
   let go;
   if(ns.k==='done')go='<p class="go">Every open topic is complete.<small>Open a topic to play any set again.</small></p>';
   else{const g=goLabel(ns);go='<button class="go" data-act="go"><span class="hl">'+esc(g[0])+'</span><small>'+esc(g[1])+'</small></button>';}
@@ -812,6 +839,7 @@ function homeHTML(){
   const row=(u,k)=>{const U=S.units[u.id], m=LVS.map((L,i)=>levelMark(U,i)), fin=!!U&&nextStep(U).k==='done', cur=u.id===cu;
     return '<li class="'+(fin?'fin':cur?'cur':'')+(u.on?'':' off')+'"><button class="ir" data-act="unit" data-u="'+u.id+'" aria-label="'+(k+1)+'. '+esc(u.name)+(u.on?'. '+LVS.map((L,i)=>LV[L].n+' '+MARKWORD[m[i]]).join(', '):', not open yet')+'"><span class="nd">'+(fin?NDTICK:k+1)+'</span><span class="nm">'+(cur?'<span class="hl">'+esc(u.name)+'</span>':esc(u.name))+'</span><span class="mk">'+m.map((x,i)=>pm(i,x===2&&i===2?4:x,24)).join('')+'</span></button></li>';};
   return '<header class="top"><span class="brand">'+esc(SITE)+'</span><span class="wkk">'+(st?'streak <b>'+st+(st===1?' week':' weeks')+'</b>':'no streak yet')+'</span></header>'+
+    (needsHomeTip()?'<div class="tip" id="hometip"><b>Add this website to your Home Screen</b>In Safari, tap Share (on newer devices it is under \u201C\u22EF\u201D), then \u201CAdd to Home Screen\u201D. After that, always open the website with the new icon, so your progress stays safe.</div>':'')+
     '<section class="hero"><div>'+doggo(wearNow())+'</div><div><p class="say">'+esc(homeSay())+'</p>'+go+'</div></section>'+
     '<p class="today" id="clock">'+esc(clockText())+'</p>'+
     (wo.length>1?'<div class="wear"><span class="wn">Doggo wears: '+esc(wo.filter(x=>x[0]===wearNow())[0][1])+'</span>'+wo.map(x=>'<button class="wb" data-act="wear" data-w="'+x[0]+'" aria-pressed="'+(wearNow()===x[0])+'" aria-label="'+esc(x[1])+'" title="'+esc(x[1])+'">'+doggo(x[0])+'</button>').join('')+'</div>'
@@ -819,6 +847,14 @@ function homeHTML(){
     '<section class="trail"><h2 class="sq">All topics'+squig+'</h2><ol class="idx">'+UNITS.map(row).join('')+'</ol></section>'+
     '<div class="foot"><button class="btn sec sm" data-act="finish">Finish session</button><span>Only when your teacher asks for it.</span><span class="sp"></span><button class="lk" data-act="teacher">Lehrkraft</button></div>'+
     (storeOK?'':'<p class="warn">This device cannot save your progress. It is lost when you close the page.</p>');
+}
+// Hinweis „Add this website to your Home Screen“ (Paul, 16. Oktober 2026): nur auf iPad und iPhone in Safari, solange die Website nicht über das Icon läuft.
+// Grund: Safari löscht nach sieben Tagen ohne Besuch die Daten einer Website, über das Icon nicht (Stand des Wissens, ungeprüft). Der Lernstand zieht nicht um (Paul: „egal“).
+function needsHomeTip(){
+  try{const ua=navigator.userAgent||'', ios=/iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);   // iPadOS meldet sich als Mac mit Touch
+    if(!ios||!/Safari\//.test(ua)||/CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(ua))return false;
+    return !(navigator.standalone===true||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches));
+  }catch(e){return false;}
 }
 function stations(uid){
   const U=getU(uid), D=UNIT[uid], ns=stepOf(uid), st=U.st?LVS.indexOf(U.st):-1, out=[];
@@ -835,7 +871,8 @@ function stations(uid){
   });
   return out;
 }
-function defaultSel(uid){const U=getU(uid);if(!U.st)return 'place';const ns=stepOf(uid);const n=stations(uid).find(s=>s.next);return n?n.i:null;}
+function defaultSel(uid){const U=getU(uid);if(!U.st)return 'place';   // nur bei eingeschalteter Einstufung
+  const ns=stepOf(uid);const n=stations(uid).find(s=>s.next);return n?n.i:null;}
 function pathHTML(){
   const id=vs.unit, D=UNIT[id], U=getU(id), st=stations(id), ns=stepOf(id), stIx=U.st?LVS.indexOf(U.st):-1;
   const row=n=>{
@@ -846,8 +883,8 @@ function pathHTML(){
     let body='';
     if(open&&shut){   // Checkpoint gesperrt: welches Set fehlt noch?
       const miss=D.sets[n.L].map((x,k)=>lv.s[k]<3?'\u201C'+esc(x.n)+'\u201D'+(lv.s[k]?' (best so far '+lv.p[k]+'%)':' (not started yet)'):'').filter(Boolean);
-      body='<p>The checkpoint opens when both sets of '+LV[n.L].n+' have 80% or more.'+best+'</p><p>Still to do: '+miss.join(' and ')+'.</p>';}
-    else if(open&&n.cp)body='<p class="cq">'+esc(SAY.cpGo[(n.ix+lv.c[0])%SAY.cpGo.length])+'</p><p>10 items, no second tries. You pass with 80%.'+best+'</p><button class="btn" data-act="start" data-k="cp"'+at+'>Start checkpoint</button>';
+      body='<p>The checkpoint opens when both sets of '+LV[n.L].n+' have 90% or more.'+best+'</p><p>Still to do: '+miss.join(' and ')+'.</p>';}
+    else if(open&&n.cp)body='<p class="cq">'+esc(SAY.cpGo[(n.ix+lv.c[0])%SAY.cpGo.length])+'</p><p>10 items, no second tries. You pass with 90%.'+best+'</p><button class="btn" data-act="start" data-k="cp"'+at+'>Start checkpoint</button>';
     else if(open&&lock)body='<p><b>'+esc(lname(nm))+'</b> Doggo explains one rule in about a minute. Get his two questions right and '+(todo.length>1?'the next lesson opens.':'the set opens: 10 items, about 6 minutes.')+'</p>'+
       '<div class="xb"><button class="btn" data-act="lesson"'+lat(nm)+'>Start lesson</button><button class="btn sec" data-act="lesson" data-skip="1"'+lat(nm)+'>I know this</button></div>';
     else if(open)body='<p>'+(again.length?'Doggo recommends his lesson'+(again.length>1?'s':'')+' again before the next round. ':'')+'10 items, about 6 minutes.'+(best||(n.x===3?' Shown in the placement test. Open it anyway if you like.':' Not started yet.'))+'</p><div class="xb">'+
@@ -856,7 +893,7 @@ function pathHTML(){
     return '<li class="'+(n.next?'nx':shut?'shut':'')+'"><button class="rw" data-act="sel" data-i="'+n.i+'" aria-expanded="'+open+'">'+pm(n.ix,n.x,28)+
       '<span class="nm">'+(n.next?'<span class="hl">'+esc(n.name)+'</span>':esc(n.name))+'</span>'+
       (n.cp&&n.L===ns.L?'<span class="mini">'+dogga('stern')+'</span>':n.next&&ns.k==='les'?'<span class="mini">'+doggo('none','ok')+'</span>':'')+
-      '<span class="sc'+(shut||n.best===null?' no':n.best<80?' lo':'')+'">'+(shut?LOCK:n.best!==null?n.best+'%':n.next?'next':'')+'</span></button>'+
+      '<span class="sc'+(shut||n.best===null?' no':n.best<PASS?' lo':'')+'">'+(shut?LOCK:n.best!==null?n.best+'%':n.next?'next':'')+'</span></button>'+
       (open?'<div class="xp">'+body+'</div>':'')+'</li>';
   };
   let h='<header class="ph"><button class="lk" data-act="home">'+IC.back+'All topics</button><button class="lk" data-act="rules" data-u="'+id+'">Rule card</button></header>'+
@@ -865,7 +902,7 @@ function pathHTML(){
     const open=vs.sel==='place';
     h+='<ol class="rows"><li class="nx"><button class="rw" data-act="sel" data-i="place" aria-expanded="'+open+'"><span class="nm"><span class="hl">Placement test</span></span><span class="sc no">first</span></button>'+
       (open?'<div class="xp" style="padding-left:4px"><p>12 items, about 6 minutes. There is no feedback during the test. It decides where you start.</p><button class="btn" data-act="start" data-k="place">Start placement test</button></div>':'')+'</li></ol>';
-  }else h+='<p class="note">Placement test done. You started at '+LV[U.st].n+'.'+(U.to&&!U.lv.p.c[0]?' You go straight to the '+LV.p.n+' checkpoint.':'')+'</p>';
+  }else if(U.pl)h+='<p class="note">Placement test done. You started at '+LV[U.st].n+'.'+(U.to&&!U.lv.p.c[0]?' You go straight to the '+LV.p.n+' checkpoint.':'')+'</p>';
   LVS.forEach((L,ix)=>{
     h+='<section class="lv"><h2 class="sq">'+LV[L].sym+' '+LV[L].n+squig+'</h2>'+(stIx>ix&&!U.lv[L].c[1]?'<em>shown in the placement test</em>':'')+
       '<ol class="rows">'+st.filter(n=>n.L===L).map(row).join('')+'</ol></section>';
@@ -892,7 +929,7 @@ function startLesson(uid,L,n,m,preview,skip){ // n = Set, m = Nummer der Mini-Le
   render();
 }
 function lesPhase(p){
-  les.ph=p; les.ans=null;
+  les.ph=p; les.ans=null; les.ord=null;
   if(p==='intro'){const more=lesMore();les.introT=les.skipped?(more?SAYL.skipMore:SAYL.skip):more?pickLine('lintrom',SAYL.introMore):pickLine('lintro',SAYL.intro);}
   if(p==='c'){les.ci=0;les.v=0;les.retry=false;}
   if(p==='end'){ // Check bestanden: Regel steht auf der Karte, das Set ist offen
@@ -903,10 +940,17 @@ function lesPhase(p){
 }
 function lesStep(){ // aktueller Schritt: Blatt, Text, bei Fragen Optionen und Rückmeldungen
   const le=lesOf();
-  if(les.ph==='x')return le.s[les.i];
+  if(les.ph==='x')return mixOpts(le.s[les.i]);
   if(les.ph==='intro')return {b:les.skipped?'':le.s[le.s.length-1].b,t:les.introT};
-  if(les.ph==='c'){const q=le.k[les.ci][les.v];return Object.assign({},q,{t:(les.retry?les.againT+' ':'')+q.t});}
+  if(les.ph==='c'){const q=le.k[les.ci][les.v];return mixOpts(Object.assign({},q,{t:(les.retry?les.againT+' ':'')+q.t}));}
   return {card:true,t:les.endT,m:'happy'};
+}
+// Antworten einer Frage bei jeder Anzeige neu mischen (Paul, 16. Oktober 2026). Die Reihenfolge bleibt stehen, bis die nächste Frage kommt (les.ord = null).
+const nobr=h=>h.replace(/(^|\s)(-[A-Za-z]+[.,!?]?)/g,'$1<span class="nw">$2</span>');   // „-ly“, „-s“ nicht am Bindestrich umbrechen
+function mixOpts(st){
+  if(!st||!st.o)return st;
+  if(!les.ord||les.ord.length!==st.o.length)les.ord=shuffle(st.o.map((_,k)=>k),Math.random);
+  return Object.assign({},st,{o:les.ord.map(k=>st.o[k]),c:les.ord.indexOf(st.c)});
 }
 function boardHTML(src,prev,fill){ // Farben, überall gleich: <<Hilfsverb>> blau, {Verbform} rot, [Zeitwort] gelb. Dazu ~durchgestrichen~ ^Randnotiz^ ___ Lücke
   const old=k=>prev.indexOf(k)>=0?' old':'';
@@ -930,12 +974,12 @@ function lessonHTML(){
   if(st.o&&les.ans!==null)fill=les.ans===st.c?'<mark class="ok">'+esc(st.o[st.c])+'</mark>':'<del>'+esc(st.o[les.ans])+'</del> <ins>'+esc(st.o[st.c])+'</ins>';
   let h=(les.preview?'<div class="banner">Vorschau: nichts wird gespeichert.</div>':'')+
     '<div class="it-top"><button class="it-x" data-act="lquit" aria-label="Leave the lesson">'+IC.close+'</button><div class="it-bar"><i style="width:'+Math.round(pos/total*100)+'%"></i></div><span class="it-n">'+(pos+1)+' of '+total+'</span></div>'+
-    '<div class="it-where"><span>'+LV[les.L].sym+' Lesson'+(lesList(les.uid,les.L,les.n).length>1?' '+(lesList(les.uid,les.L,les.n).indexOf(les.m)+1)+' of '+lesList(les.uid,les.L,les.n).length:'')+': '+esc(le.t)+'</span>'+(les.ph==='x'?'<button class="lk" data-act="lskip">I know this</button>':'')+'</div><div class="stage">';
+    '<div class="it-where"><span>'+LV[les.L].sym+' Lesson'+(lesList(les.uid,les.L,les.n).length>1?' '+(lesList(les.uid,les.L,les.n).indexOf(les.m)+1)+' of '+lesList(les.uid,les.L,les.n).length:'')+': '+esc(le.t)+'</span>'+(les.ph==='x'?'<button class="lk" data-act="lskip">I know this</button>':'')+'</div><div class="stage'+(st.o?' q':'')+'">';
   if(st.card)h+='<div class="pinned">'+cardLines(les.uid,les.L+les.m)+'</div>';
   else if(st.b&&!(st.o&&st.o.every(o=>st.b.split(' // ').indexOf(o)>=0)))h+='<div class="board">'+boardHTML(st.b,prev,fill)+'</div>';
-  if(st.o)h+='<div class="opts'+(st.o.every(o=>o.length<20)&&st.o.length<4?' two':'')+'">'+st.o.map((o,k)=>'<button class="opt'+(les.ans===null?'':k===st.c?' right':k===les.ans?' wrong':' dim')+'" data-act="lpick" data-k="'+k+'"'+(les.ans===null?'':' disabled')+'>'+esc(o)+'</button>').join('')+'</div>';
+  if(st.o)h+='<div class="opts'+(st.o.every(o=>o.length<20)&&st.o.length<4?' two':'')+'">'+st.o.map((o,k)=>'<button class="opt'+(les.ans===null?'':k===st.c?' right':k===les.ans?' wrong':' dim')+'" data-act="lpick" data-k="'+k+'"'+(les.ans===null?'':' disabled')+'>'+nobr(esc(o))+'</button>').join('')+'</div>';
   const label=les.ph==='end'?(les.preview?'Done':les.more?'Next lesson':'Start the set'):'Next';
-  h+='</div><div class="dlg"><div class="dlg-in" data-act="lnext"><div class="dlg-fig">'+doggo('none',say.m||'ok')+'</div><span class="dlg-name">Doggo</span><div class="dlg-tx">'+
+  h+='</div><div class="dlg'+(st.o?' q':'')+'"><div class="dlg-in" data-act="lnext"><div class="dlg-fig">'+doggo('none',say.m||'ok')+'</div><span class="dlg-name">Doggo</span><div class="dlg-tx">'+
     '<p id="ltx" data-t="'+esc(say.t)+'"></p></div><div class="dlg-ft">'+(les.ph==='x'&&les.i>0?'<button class="lk" data-act="lback">'+IC.back+'Back</button>':'<span></span>')+
     (asked?'<span class="dlg-hint">Tap an answer</span>':'<button class="btn sm" data-act="lnext" id="lnextbtn">'+label+'<span class="dlg-more" aria-hidden="true">\u25BC</span></button>')+'</div></div></div>';
   return h;
@@ -955,12 +999,12 @@ function lessonNext(){
   const le=lesOf(), st=lesStep();
   if(st.o&&les.ans===null)return;
   if(les.ph==='x'){
-    if(les.i<le.s.length-1){les.i++;les.ans=null;return render();}
+    if(les.i<le.s.length-1){les.i++;les.ans=null;les.ord=null;return render();}
     return lesPhase('intro');
   }
   if(les.ph==='intro')return lesPhase('c');
   if(les.ph==='c'){
-    const right=les.ans===st.c; les.ans=null;
+    const right=les.ans===st.c; les.ans=null; les.ord=null;
     if(!right){les.v=1-les.v;les.retry=true;les.againT=pickLine('lagain',SAYL.again);return render();} // Doggo hat erklärt, jetzt die andere Fassung
     les.retry=false; les.v=0;
     if(les.ci<le.k.length-1){les.ci++;return render();}
@@ -978,20 +1022,20 @@ function cardLine(c){
 const cardLines=(uid,sid)=>UNIT[uid].card.lines.filter(c=>c.s===sid).map(cardLine).join('');
 function cardHTML(uid,whole){
   const D=UNIT[uid], C=D.card, U=getU(uid), stIx=U.st?LVS.indexOf(U.st):-1, ns=stepOf(uid);
-  let upto=ns.k==='done'?2:ns.L?LVS.indexOf(ns.L):0, more=false;
+  let upto=ns.k==='done'?2:ns.L?LVS.indexOf(ns.L):0;
   if(run&&run.uid===uid&&run.L)upto=Math.max(upto,LVS.indexOf(run.L));
   if(les&&les.uid===uid)upto=Math.max(upto,LVS.indexOf(les.L));
   let h='<div class="rules"><h1>'+esc(D.ruleTitle)+'</h1><p class="ctop"><b>'+esc(C.top[0])+'</b> '+esc(C.top[1])+'</p>'+(C.key?'<div class="board ckey">'+boardHTML(C.key,C.key,'')+'</div>':'');
   LVS.forEach((L,ix)=>{
     const mine=C.lines.filter(c=>c.s[0]===L); if(!mine.length)return;
-    if(!whole&&ix>upto){more=true;return;}
+    if(!whole&&ix>upto)return;
     h+='<h2>'+LV[L].sym+' '+LV[L].n+'</h2>';
     mine.forEach(c=>{
       const m=+c.s[1], known=whole||!D.lessons[c.s]||stIx>ix||(U.lv[L].l||[])[m-1];
-      if(known)h+=cardLine(c); else{more=true;h+='<div class="cl todo">Comes with the lesson \u201C'+esc(D.lessons[c.s].t)+'\u201D</div>';}
+      if(known)h+=cardLine(c); else h+='<div class="cl todo">Comes with the lesson \u201C'+esc(D.lessons[c.s].t)+'\u201D</div>';
     });
   });
-  return h+(more?'<p><button class="lk" data-act="cardall" data-u="'+uid+'">Show the whole card</button></p>':'')+'</div>';
+  return h+'</div>';   // kein „Show the whole card“ mehr für Schüler:innen (Paul, 16. Oktober 2026): die Karte nur Stück für Stück. Lehreransicht und Vorschau zeigen sie ganz.
 }
 function runHTML(){
   const it=BY[run.items[run.i]], r=run.cur||{}, n=run.items.length, done=run.phase==='fb';
@@ -1045,15 +1089,15 @@ function endHTML(){
       '<div class="acts"><button class="btn" data-act="home">Continue</button></div>';
   }
   const U=getU(run.uid);
-  h+='<p class="mute">'+esc(run.title)+'</p><div class="grade'+(pct<80?' lo':'')+'">'+pct+'%'+squigC+'</div>';
+  h+='<p class="mute">'+esc(run.title)+'</p><div class="grade'+(pct<PASS?' lo':'')+'">'+pct+'%'+squigC+'</div>';
   if(run.kind==='set'){
-    const s=statusFor(pct), lv=U.lv[run.L];   // Hinweis auf den Checkpoint der Stufe (gesperrt bis beide Sets 80 % haben)
-    const cpt=run.preview||lv.c[1]?'':cpLocked(U,run.L)?(s===3?' The checkpoint opens when the other set has 80% too.':' The checkpoint opens when both sets have 80%.'):' The '+LV[run.L].n+' checkpoint is open.';
-    h+='<p class="resline">'+(s===3?'This set is done.':s===2?'Almost. 80% completes the set.':'Not there yet. Open the rule card and try again.')+cpt+'</p>'+
+    const s=statusFor(pct), lv=U.lv[run.L];   // Hinweis auf den Checkpoint der Stufe (gesperrt bis beide Sets 90 % haben)
+    const cpt=run.preview||lv.c[1]?'':cpLocked(U,run.L)?(s===3?' The checkpoint opens when the other set has 90% too.':' The checkpoint opens when both sets have 90%.'):' The '+LV[run.L].n+' checkpoint is open.';
+    h+='<p class="resline">'+(s===3?'This set is done.':s===2?'Almost. 90% completes the set.':'Not there yet. Open the rule card and try again.')+cpt+'</p>'+
       '<div class="coach"><div>'+doggo('none',pct===100?'surprised':s===3?'happy':s===2?'ok':'dry')+'</div><p>'+esc(run.endLine)+'</p></div>';
   }else{
-    const pass=pct>=80, lv=U.lv[run.L], ws=lv.r||1, ag=run.preview?0:lesList(run.uid,run.L,ws).filter(m=>(lv.l||[])[m-1]===2).length;
-    h+='<p class="resline">'+(pass?'You passed '+LV[run.L].n+'.':'You need 80%.'+(run.preview?'':' Best next step: \u201C'+esc(setName(run.uid,run.L,ws))+'\u201D'+(ag?', with Doggo\u2019s lesson'+(ag>1?'s':'')+' first':'')+'.'+(lv.c[0]>=2?' Read the rule card first and ask your teacher about the corrections below.':'')))+'</p>'+
+    const pass=pct>=PASS, lv=U.lv[run.L], ws=lv.r||1, ag=run.preview?0:lesList(run.uid,run.L,ws).filter(m=>(lv.l||[])[m-1]===2).length;
+    h+='<p class="resline">'+(pass?'You passed '+LV[run.L].n+'.':'You need 90%.'+(run.preview?'':' Best next step: \u201C'+esc(setName(run.uid,run.L,ws))+'\u201D'+(ag?', with Doggo\u2019s lesson'+(ag>1?'s':'')+' first':'')+'.'+(lv.c[0]>=2?' Read the rule card first and ask your teacher about the corrections below.':'')))+'</p>'+
       '<div class="coach"><div>'+dogga(pass?'':'stern')+'</div><p>'+esc(run.endLine)+'</p></div>'+wonHTML();
     if(pass&&run.L==='k'&&!run.preview&&advOpen(U)){const nx=curUnit();
       if(nx&&nx!==run.uid)h+='<p class="txt" id="advhint">'+LV.p.sym+' Advanced is open now if you want more. It is optional: \u201CContinue\u201D on the start page takes you to '+esc(UMETA[nx].name)+'.</p>';}
@@ -1091,11 +1135,11 @@ function parseRows(txt){
 const restoreLink=code=>location.href.split('#')[0]+'#r='+code;
 const tagName=(uid,k)=>k==='SP'?'Rechtschreibung':(UNIT[uid]&&UNIT[uid].tags[k])||k;
 function lvLine(x,i){
-  const st=LVS.indexOf(x.st), l=x.lv[i], sym=LV[LVS[i]].sym+' ';
+  const st=Math.max(CONFIG.PLACEMENT?-1:0,LVS.indexOf(x.st)), l=x.lv[i], sym=LV[LVS[i]].sym+' ';   // Einstufung aus: ohne Ergebnis Start bei Basic
   if(st<0)return sym+'nicht eingestuft';
   if(i<st&&!l[2][1])return sym+'<span class="mute">per Einstufung</span>';
-  const shut=l[0].some(s=>s<3)&&!(x.to&&i===2&&!l[2][0]);   // gesperrt, bis beide Sets 80 % haben (seit 12. Oktober 2026)
-  return sym+l[0].filter(s=>s===3).length+'/'+NSET+' Sets, '+(l[2][1]?'Checkpoint bestanden ('+l[2][2]+'%)':l[2][0]?'<span class="flag">Checkpoint '+l[2][0]+'\u00D7 nicht bestanden</span>':shut?'Checkpoint gesperrt':'Checkpoint offen');
+  const shut=l[0].some((s,k)=>!setDone(s,l[1][k]))&&!(x.to&&i===2&&!l[2][0]);   // gesperrt, bis beide Sets 90 % haben (seit 12. Oktober 2026, 90 % seit 16. Oktober 2026)
+  return sym+l[0].filter((s,k)=>setDone(s,l[1][k])).length+'/'+NSET+' Sets, '+(l[2][1]?'Checkpoint bestanden ('+l[2][2]+'%)':l[2][0]?'<span class="flag">Checkpoint '+l[2][0]+'\u00D7 nicht bestanden</span>':shut?'Checkpoint gesperrt':'Checkpoint offen');
 }
 function teacherHTML(){
   if(!tView.ok)return '<h1 class="h1">Lehreransicht</h1><p class="txt">PIN eingeben.</p><div class="acts"><input class="pin" type="password" inputmode="numeric" id="pin" autocomplete="off" aria-label="PIN"><button class="btn" data-act="pin">\u00D6ffnen</button></div><p class="warn" id="pinmsg"></p><div class="acts"><button class="btn sec" data-act="home">Zur\u00FCck</button></div>';
@@ -1115,7 +1159,7 @@ function teacherHTML(){
         if(!r.o){h+='<tr><td>'+esc(r.who)+'</td><td colspan="8" class="flag">Code unlesbar</td></tr>';return;}
         const o=r.o, q=o.q&&o.q[1]?Math.round(o.q[0]/o.q[1]*100):null, flags=[], uids=Object.keys(o.u), errs=[];
         uids.forEach(uid=>{const x=o.u[uid];
-          x.lv.forEach((l,i)=>{if(!l[2][1]&&(l[2][0]>=2||(i>=LVS.indexOf(x.st)&&(l[4]||[]).some((a,k)=>a>=3&&l[0][k]<3))))flags.push('steckt fest');});   // zwei Checkpoints nicht bestanden oder ein Set nach drei Runden unter 80 %
+          x.lv.forEach((l,i)=>{if(!l[2][1]&&(l[2][0]>=2||(i>=LVS.indexOf(x.st)&&(l[4]||[]).some((a,k)=>a>=3&&!setDone(l[0][k],l[1][k])))))flags.push('steckt fest');});   // zwei Checkpoints nicht bestanden oder ein Set nach drei Runden unter 90 %
           if(q!==null&&q>=95&&o.q[1]>=30&&x.st&&x.st!=='p')flags.push('unterfordert');
           Object.keys(x.e||{}).forEach(k=>{if(x.e[k][0]>0)errs.push([x.e[k][0],tagName(uid,k)]);});});
         if(o.d&&(Date.now()-new Date(o.d).getTime())/864e5>14)flags.push('\u00FCber 14 Tage inaktiv');
@@ -1140,11 +1184,11 @@ function teacherHTML(){
       return '<div class="sol"><code>'+id+'</code>'+esc(it.x)+'<br><b>'+sol+'</b>'+(it.f?' <span class="mute">'+esc(it.f)+'</span>':'')+'</div>';}).join('')+'</details>';});
   }else if(tView.tab==='vorschau'){
     const uid=tView.unit, D=UNIT[uid];
-    h+=unitTabs+'<p class="txt">Jede Stelle l\u00E4sst sich direkt \u00F6ffnen. In der Vorschau wird nichts gespeichert.</p><div class="acts"><button class="btn sec" data-act="pv" data-k="place">Einstufung</button><button class="btn sec" data-act="rules" data-u="'+uid+'">Regelkarte</button></div>';
+    h+=unitTabs+'<p class="txt">Jede Stelle l\u00E4sst sich direkt \u00F6ffnen. In der Vorschau wird nichts gespeichert.</p><div class="acts"><button class="btn sec" data-act="pv" data-k="place">Einstufung'+(CONFIG.PLACEMENT?'':' (f\u00FCr Sch\u00FCler:innen aus)')+'</button><button class="btn sec" data-act="rules" data-u="'+uid+'">Regelkarte</button></div>';
     LVS.forEach(L=>{h+='<h2 class="tsec">'+LV[L].sym+' '+LV[L].n+'</h2><div class="acts">'+D.sets[L].map((s,k)=>'<button class="btn sec sm" data-act="pv" data-k="set" data-l="'+L+'" data-n="'+(k+1)+'">'+esc(s.n)+'</button>').join('')+'<button class="btn sec sm" data-act="pv" data-k="cp" data-l="'+L+'">Checkpoint</button></div>'+(D.has[L].some(x=>x.length)?'<div class="acts">'+D.has[L].flatMap((ms,k)=>ms.map(m=>'<button class="btn quiet sm" data-act="pvles" data-l="'+L+'" data-n="'+(k+1)+'" data-m="'+m+'">Lektion: '+esc(D.lessons[L+m].t)+'</button>')).join('')+'</div>':'');});
   }else{
     h+='<p class="txt">Stand der Website: '+esc(BUILD)+'. Offene Bausteine: '+on.map(id=>esc(UMETA[id].name)+' (Inhalte vom '+esc(UNIT[id].date)+')').join(', ')+'. Popkultur-Fakten einmal pro Halbjahr pr\u00FCfen lassen.</p>'+
-      '<p class="txt">Formular-Link und PIN stehen oben in der Datei index.html im Abschnitt \u201EEINSTELLUNGEN\u201C. Formular-Link gesetzt: '+(CONFIG.FORM_PREFILL?'ja':'nein')+'.</p>'+
+      '<p class="txt">Formular-Link, PIN und Einstufung stehen oben in der Datei index.html im Abschnitt \u201EEINSTELLUNGEN\u201C. Formular-Link gesetzt: '+(CONFIG.FORM_PREFILL?'ja':'nein')+'. Einstufung: '+(CONFIG.PLACEMENT?'an':'aus, jeder Baustein beginnt bei Basic')+'.</p>'+
       '<p class="txt">Speichern auf diesem Ger\u00E4t m\u00F6glich: '+(storeOK?'ja':'nein')+'.</p>'+
       '<h2 class="tsec">Stand dieses Ger\u00E4ts als Link</h2><p class="txt">Wer diesen Link \u00F6ffnet, kann den Stand dieses Ger\u00E4ts laden. So sieht auch der Link aus, den Sch\u00FCler:innen zum Wiederherstellen bekommen.</p><div class="code">'+esc(restoreLink(encodeState(S)))+'</div>'+
       '<h2 class="tsec">Zur\u00FCcksetzen</h2><div class="acts"><button class="btn sec" data-act="reset">Fortschritt auf diesem Ger\u00E4t l\u00F6schen</button></div><p class="mute" id="resetmsg"></p>';
@@ -1208,21 +1252,21 @@ function closeRun(){
     if(!run.preview){const U=touchU(run.uid),e0=earned(U);U.pl=pl;U.st=o.st;U.to=o.to;costume(U,e0);week();save();}
     return;
   }
-  if((run.kind==='set'||run.kind==='cp')&&pct===100)run.party=true;   // Konfetti beim Ergebnis
+  if((run.kind==='set'&&pct===100)||(run.kind==='cp'&&pct>=PASS))run.party=true;   // Konfetti beim Ergebnis: Set bei 100 %, Checkpoint bei jedem Bestehen (Paul, 16. Oktober 2026)
   if(run.kind==='set'){const s=statusFor(pct);run.endLine=pct===100?pickLine('perfect',SAY.perfect):pickLine('set'+s,SAY['set'+s]);}
-  else if(run.kind==='cp')run.endLine=pct>=80?pickLine('cpPass',SAY.cpPass):pickLine('cpFail',SAY.cpFail);
+  else if(run.kind==='cp')run.endLine=pct>=PASS?pickLine('cpPass',SAY.cpPass):pickLine('cpFail',SAY.cpFail);
   if(run.preview)return;
   if(run.kind==='warm'){S.today.warm=true;week();save();return;}
   const U=touchU(run.uid), lv=U.lv[run.L], e0=earned(U);
   if(run.kind==='set'){if(!lv.a)lv.a=[0,0];lv.a[run.n-1]++;lv.s[run.n-1]=Math.max(lv.s[run.n-1],statusFor(pct));lv.p[run.n-1]=Math.max(lv.p[run.n-1],pct);if(lv.r===run.n)lv.r=0;}
   else{lv.c[0]++;lv.c[2]=Math.max(lv.c[2],pct);
-    if(pct>=80){lv.c[1]=1;lv.r=0;}
+    if(pct>=PASS){lv.c[1]=1;lv.r=0;}
     else{const w=weakSet(lv);lv.r=w;if(lv.c[0]===1){if(!Array.isArray(lv.l))lv.l=[0,0,0,0];lesList(run.uid,run.L,w).forEach(m=>{lv.l[m-1]=2;});}}   // beim ersten Fehlschlag: Lektionen des schwächsten Sets noch einmal
   }
   costume(U,e0); week(); save();
 }
 
-/* ---------- Konfetti bei 100 % in einem Set oder Checkpoint (Paul, 12. Oktober 2026). Ohne Ton, verschwindet nach fünf Sekunden, aus bei reduzierter Bewegung. ---------- */
+/* ---------- Konfetti bei 100 % in einem Set (Paul, 12. Oktober 2026) und bei jedem bestandenen Checkpoint (16. Oktober 2026). Ohne Ton, verschwindet nach fünf Sekunden, aus bei reduzierter Bewegung. ---------- */
 function confetti(){
   if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   const old=$('.cf'); if(old)old.remove();
@@ -1254,7 +1298,6 @@ document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]'); if(!t)return; const act=t.dataset.act;
   if(act==='closesheet'){if(e.target===t||t.tagName==='BUTTON')$('#layer').innerHTML='';return;}
   if(act==='rules')return loadUnit(t.dataset.u).then(()=>sheet(cardHTML(t.dataset.u,view==='teacher'||!!(run&&run.preview)||!!(les&&les.preview))),fail);
-  if(act==='cardall')return sheet(cardHTML(t.dataset.u,true));
   if(act==='reload')return location.reload();
   if(act==='home'){if(midRun())return;run=null;les=null;view='home';tView.ok=false;return render();}
   if(act==='askyes'||act==='askno'){const f=askYes;askYes=null;$('#layer').innerHTML='';if(act==='askyes'&&f)f();return;}
@@ -1265,13 +1308,14 @@ document.addEventListener('click',e=>{
   if(act==='pvles')return startLesson(tView.unit,t.dataset.l,t.dataset.n,t.dataset.m,true,false);
   if(act==='lskip'){les.skipped=true;return lesPhase('intro');}
   if(act==='lnext')return lessonNext();
-  if(act==='lback'){if(les.ph==='x'&&les.i>0){les.i--;les.ans=null;render();}return;}
+  if(act==='lback'){if(les.ph==='x'&&les.i>0){les.i--;les.ans=null;les.ord=null;render();}return;}
   if(act==='lpick'){if(les.ans===null){les.ans=+t.dataset.k;render(true);}return;}
   if(act==='lquit'){const uid=les.uid,pv=les.preview;les=null;if(pv){view='teacher';return render();}return openUnit(uid);}
   if(act==='sel'){const i=/^\d+$/.test(t.dataset.i)?+t.dataset.i:t.dataset.i;vs.sel=vs.sel===i?null:i;return render(true);}
   if(act==='start')return start(t.dataset.k,vs.unit,t.dataset.l,+t.dataset.n||0,false);
-  if(act==='go'){const ns=globalNext();if(ns.k==='done')return;if(ns.k==='warm')return start('warm');
-    return loadUnit(ns.unit).then(()=>ns.k==='les'?startLesson(ns.unit,ns.L,ns.n,ns.m,false):start(ns.k,ns.unit,ns.L,ns.n,false),fail);}
+  if(act==='go'){const n0=globalNext();if(n0.k==='done')return;if(n0.k==='warm')return start('warm');
+    return loadUnit(n0.unit).then(()=>{const ns=globalNext();if(ns.k==='done'||ns.k==='load')return render();if(ns.k==='warm')return start('warm');   // den Schritt erst nach dem Laden bestimmen (Lektionen kennt nur die Datei)
+      return ns.k==='les'?startLesson(ns.unit,ns.L,ns.n,ns.m,false):start(ns.k,ns.unit,ns.L,ns.n,false);},fail);}
   if(act==='wear'){S.wear=t.dataset.w;save();return render(true);}
   if(act==='pick')return pick(t.dataset.v);
   if(act==='check')return check(false);
@@ -1280,7 +1324,7 @@ document.addEventListener('click',e=>{
   if(act==='next')return next();
   if(act==='finish'||act==='form'){if(S.sess.items&&CONFIG.FORM_PREFILL)window.open(formURL(),'_blank','noopener');save();view='finish';return render();}
   if(act==='restoreyes'||act==='restoreno'){
-    if(act==='restoreyes'&&restoreO){try{S=stateFromCode(restoreO);}catch(err){S=load();}touchDay();save();}
+    if(act==='restoreyes'&&restoreO){try{S=fixState(stateFromCode(restoreO));}catch(err){S=load();}touchDay();save();}
     restoreO=null; try{history.replaceState(null,'',location.pathname+location.search);}catch(err){}
     return boot(true);
   }
