@@ -279,6 +279,32 @@ summary{padding:10px 0;cursor:pointer}
 .cf i{position:absolute;top:-24px;width:9px;height:14px;border-radius:2px;opacity:.95;animation:cf var(--t,2.6s) cubic-bezier(.3,.6,.5,1) var(--d,0s) forwards}
 @keyframes cf{to{transform:translate(var(--x,0),calc(100vh + 60px)) rotate(var(--r,540deg));opacity:.85}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.cf{display:none}}
+/* Legendary challenge (seit dem 23. Oktober 2026): Gold als Akzent im Rotstift-Look. --gold für Flächen und Linien, --goldtx für Schrift (Kontrast ab 4,5 zu 1) */
+:root{--goldtx:#8A6300}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--goldtx:#E5B93C}}
+:root[data-theme="dark"]{--goldtx:#E5B93C}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#1A1D25}
+.star{vertical-align:-3px;flex:none}
+.sq .star{position:static;width:22px;height:22px;margin-right:6px;vertical-align:-2px}
+.lv.leg .sq{color:var(--goldtx)}
+.lv.leg .rows li{border-bottom-color:var(--gold)}
+.lv.leg .rw .sc{color:var(--goldtx)}
+.lv.leg .rw .sc.no{color:var(--goldtx);font-family:var(--ft);font-style:italic;font-size:16px}
+.it-bar.gold i{background:var(--gold)}
+.it-where.leg span,.legtag{color:var(--goldtx);font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.legtag{display:flex}
+.grade.gold{color:var(--goldtx)}
+.legnews{border:2px solid var(--gold);border-radius:var(--r);padding:12px 14px 14px;margin:18px 0 6px}
+.legnews b{display:flex;align-items:center;gap:6px;font-family:var(--ft);font-size:19px;color:var(--goldtx);margin-bottom:4px}
+.legnews p{font-size:15.5px;margin-bottom:12px}
+.lgq{font-family:var(--ft);font-size:19px;font-weight:700;margin-top:14px}
+.opt.sel{border-color:var(--pri);box-shadow:inset 0 0 0 2px var(--pri)}
+.lgspot{line-height:1.9}
+.tw{font:inherit;line-height:1.3;border:0;background:transparent;padding:5px 2px;margin:0 -2px;border-radius:3px;color:inherit;min-height:44px}
+.tw.on{background:var(--gapbg);color:var(--onacc);box-shadow:inset 0 -2.5px 0 var(--ink)}
+.corr .lgo{display:block;font-size:16px;margin-top:4px}
+.rules.gold{border:2.5px solid var(--gold);border-radius:6px;padding:14px 14px 4px;box-shadow:inset 0 0 0 4px var(--sf),inset 0 0 0 5.5px var(--gold)}
+.rules .seal{float:right;margin:-6px -4px 6px 10px}
 </style>
 </head>
 <body>
@@ -299,7 +325,7 @@ const CONFIG = {
   PLACEMENT: false
 };
 /* ======================================================= */
-const SITE = "Grammar Training", BUILD = "2026-10-23a";
+const SITE = "Grammar Training", BUILD = "2026-10-23b";
 const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":true},{"id":"ar","name":"Articles and quantifiers","on":true},{"id":"pv","name":"Passive","on":true},{"id":"de","name":"German mistakes","on":true},{"id":"rc","name":"Relative clauses","on":true},{"id":"ca","name":"Capitals and apostrophes","on":true},{"id":"rs","name":"Reported speech","on":true},{"id":"rg","name":"Formal or informal","on":true}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
 
 /* ===== FIGUREN START (Quelle: figuren.js) ===== */
@@ -420,8 +446,9 @@ function unpackBits(str,len){const a=[];for(let i=0;i<str.length;i++){const v=st
 function newLv(){return {s:[0,0],p:[0,0],c:[0,0,0],r:0,a:[0,0],l:[0,0,0,0]};}
 function newUnit(){return {pl:null,st:null,to:false,lv:{b:newLv(),k:newLv(),p:newLv()},tags:{}};}
 // Speicherformat Version 3: ein Block pro Baustein in units, Item-Gedächtnis mit Kennungen wie "pp.b2-07"
+// lgs (seit dem 23. Oktober 2026): Gedächtnis der Aufgaben der Legendary challenge (1 zuletzt falsch, 2 richtig), nur im Browser, nicht im Code
 function fresh(){return {v:3,units:{},it:{},sess:{n:0,sec:0,last:null,items:0,right:0},
-  today:{d:null,sec:0,items:0,right:0,warm:false},wk:{last:null,run:0,best:0,day:null},wear:'none',cur:null};}
+  today:{d:null,sec:0,items:0,right:0,warm:false},wk:{last:null,run:0,best:0,day:null},wear:'none',cur:null,lgs:{}};}
 // Feste Position jeder Kennung im Code: Platz des Pools mal 18 plus Nummer. Unabhängig von der Reihenfolge in pool.txt.
 function posOf(sid){const m=/^([bkp][1-6c])-(\d\d)$/.exec(sid);if(!m)return -1;const s=SETORDER.indexOf(m[1]),n=+m[2];return s<0||n<1||n>POOLMAX?-1:s*POOLMAX+n-1;}
 function idAt(pos){const n=pos%POOLMAX+1;return SETORDER[Math.floor(pos/POOLMAX)]+'-'+(n<10?'0':'')+n;}
@@ -430,7 +457,8 @@ function encodeState(S){
   Object.keys(S.units).forEach(id=>{
     const U=S.units[id],bits=[];for(let i=0;i<NPOS;i++)bits.push(0);
     Object.keys(S.it).forEach(k=>{if(k.indexOf(id+'.')===0){const p=posOf(k.slice(id.length+1));if(p>=0)bits[p]=S.it[k];}});
-    u[id]={pl:U.pl,st:U.st,to:U.to?1:0,lv:LVS.map(L=>{const l=U.lv[L];return [l.s,l.p,l.c,l.r||0,l.a||[0,0],l.l||[0,0,0,0]];}),e:U.tags||{},h:packBits(bits).replace(/0+$/,'')};
+    // to: Bit 1 = Test-out, Bit 2 = Legendary challenge bestanden (seit 23. Oktober 2026, der Code wird dadurch nicht länger)
+    u[id]={pl:U.pl,st:U.st,to:(U.to?1:0)|(legDone(U)?2:0),lv:LVS.map(L=>{const l=U.lv[L];return [l.s,l.p,l.c,l.r||0,l.a||[0,0],l.l||[0,0,0,0]];}),e:U.tags||{},h:packBits(bits).replace(/0+$/,'')};
   });
   const o={v:3,d:S.sess.last,n:S.sess.n,m:Math.round(S.sess.sec/60),q:[S.sess.right,S.sess.items],
     wk:[S.wk.last,S.wk.run,S.wk.best],c:S.wear,k:S.cur,u};
@@ -448,7 +476,8 @@ function stateFromCode(o){
   const S=fresh();
   Object.keys(o.u).forEach(id=>{
     const x=o.u[id],U=S.units[id]=newUnit();
-    U.pl=x.pl||null;U.st=x.st||null;U.to=!!x.to;
+    U.pl=x.pl||null;U.st=x.st||null;U.to=!!((+x.to||0)&1);
+    if((+x.to||0)&2)U.lg=[1,1,LEGN];   // Legendary challenge bestanden. Versuche und bestes Ergebnis stehen nicht im Code.
     LVS.forEach((L,i)=>{const l=x.lv[i];U.lv[L]={s:l[0],p:l[1],c:l[2],r:l[3]||0,a:l[4]||[0,0],l:Array.isArray(l[5])?l[5]:[0,0,0,0]};});
     U.tags=x.e||{};
     unpackBits(x.h||'',NPOS).forEach((b,p)=>{if(b)S.it[id+'.'+idAt(p)]=b;});
@@ -546,8 +575,25 @@ function weekOf(day){const d=noon(day);d.setDate(d.getDate()-(d.getDay()+6)%7);r
 function weekBefore(w){const d=noon(w);d.setDate(d.getDate()-7);return ymd(d);}
 function streakNow(wk,day){const w=weekOf(day);return wk&&wk.last&&(wk.last===w||wk.last===weekBefore(w))?wk.run:0;}
 function markWeek(wk,day){const w=weekOf(day);if(wk.last===w)return false;wk.run=wk.last===weekBefore(w)?wk.run+1:1;wk.last=w;if(wk.run>(wk.best||0))wk.best=wk.run;return true;}
+// Legendary challenge (Paul, 16. und 23. Oktober 2026): verborgene Stufe nach dem bestandenen Advanced-Checkpoint, 20 Aufgaben ohne Regelkarte,
+// ohne zweiten Versuch (nur „Check your spelling“), Auswertung erst am Ende, bestanden nur mit 20 von 20, beliebig oft.
+// U.lg = [Versuche, bestanden, bestes Ergebnis], nur im Browser. Im Code steht nur „bestanden“ (Bit 2 im Feld to).
+const LEGN = 20;
+function legOpen(U){return !!(U&&U.lv&&U.lv.p.c[1]);}            // Advanced-Checkpoint bestanden
+function legDone(U){return !!(U&&Array.isArray(U.lg)&&U.lg[1]);}  // Legendary challenge bestanden
+// Ziehung: fünf Blöcke in fester Reihenfolge, damit keine Aufgabe eine spätere verrät (gelöste Sätze stehen erst in „Which rule?“ am Ende,
+// die Zeilen der Karte erst nach „Complete the rule“). 6 Items aus allen Stufen (2 pro Stufe, nur tippen oder Fehler finden, nicht die Sätze
+// aus „Which rule?“), 3 × Complete the rule (höchstens eine Fassung pro Kartenzeile), 4 × Spot it, then say why, 3 × Why?, 4 × Which rule?
+// mem = Item-Gedächtnis (S.it), seen = Gedächtnis der Challenge (S.lgs). Ungesehene zuerst, dann zuletzt falsche.
+function drawLeg(D,mem,seen,rnd){
+  const L=D.leg||[], key=x=>D.id+'.'+x.i, of=t=>L.filter(x=>x.t===t), rk=v=>v||0;
+  const which=drawFrom(of('which').map(key),4,seen,rnd), src={};
+  which.forEach(k=>{const x=L.find(y=>key(y)===k);src[D.id+'.'+x.src]=1;});
+  const items=[].concat(...LVS.map(Lv=>drawFrom(D.items.filter(x=>x.s[0]===Lv&&(x.t==='gap'||x.t==='fix')).map(key).filter(k=>!src[k]),2,mem,rnd)));
+  const rules=[]; shuffle(of('rule'),rnd).sort((a,b)=>rk(seen[key(a)])-rk(seen[key(b)])).forEach(x=>{if(rules.length<3&&!rules.some(y=>y.l===x.l))rules.push(x);});
+  return shuffle(items,rnd).concat(shuffle(rules.map(key),rnd),drawFrom(of('spot').map(key),4,seen,rnd),drawFrom(of('why').map(key),3,seen,rnd),shuffle(which,rnd));
+}
 // Kostüm: 1 = verdient (■ geschafft oder per Einstufung bei ▲ gestartet), 2 = legendär (nur nach bestandener Legendary challenge, Paul, 23. Oktober 2026)
-function legDone(U){return false;}   // Legendary challenge bestanden? Die Challenge gibt es noch nicht, bis dahin gibt es kein legendäres Kostüm
 function earned(U){if(!U)return 0;if(legDone(U))return 2;return U.lv.k.c[1]||U.st==='p'?1:0;}
 // Stiftmarke einer Stufe: 0 offen, 1 angefangen, 2 geschafft, 3 per Einstufung gezeigt
 function levelMark(U,i){
@@ -622,7 +668,19 @@ const SAY = {
     "Passed! Doggo said you would. For once he was right."],
   cpFail: ["Not quite there yet. The corrections below show what to practise before you try again.",
     "That wasn\u2019t enough this time. Practise the set I\u2019ve suggested and come back, I\u2019ll be here.",
-    "Not yet. Hardly anyone passes every checkpoint first time, so look at the corrections and come back soon."]
+    "Not yet. Hardly anyone passes every checkpoint first time, so look at the corrections and come back soon."],
+  // Legendary challenge (seit dem 23. Oktober 2026): Dogga ist die Prüferin
+  lgNews: ["You passed Advanced, so I can show you something most people never see. It is called the Legendary challenge and only a perfect score counts.",
+    "That was the last checkpoint, but I have one more test for you. If you pass it, Doggo gets his legendary costume."],
+  lgGo: ["This is the hardest test I have. I only hand out a legendary costume for a perfect round.",
+    "I have saved my trickiest questions for this. Take your time, because one mistake means another round.",
+    "Nobody expects you to pass this the first time. Read every sentence twice and you might surprise me."],
+  lgPass: ["Twenty out of twenty. I had nothing to correct and that almost never happens.",
+    "A perfect round. Doggo is already showing off his new costume to everyone.",
+    "You passed the Legendary challenge. I am genuinely impressed and I do not say that often."],
+  lgFail: ["Close, but legendary means perfect. Look at the corrections and try again whenever you are ready.",
+    "Not this time. Have a look at what went wrong and the next round will feel easier.",
+    "That was a good round, but this challenge does not forgive a single slip. Read the corrections and have another go."]
 };
 const lastLine={};
 function pickLine(key,list){let i=Math.floor(Math.random()*list.length);if(list.length>1&&i===lastLine[key])i=(i+1)%list.length;lastLine[key]=i;return list[i];}
@@ -634,6 +692,7 @@ window.GT_UNIT=function(u){
   u.items.forEach(x=>{x.u=u.id;x.id=u.id+'.'+x.i;BY[x.id]=x;});
   u.ids=u.items.filter(x=>x.s!=='e').map(x=>x.id);
   u.has={};LVS.forEach(L=>u.has[L]=u.sets[L].map(s=>s.p.map(x=>+x[1]).filter(m=>u.lessons&&u.lessons[L+m])));   // Nummern der Mini-Lektionen je Set
+  (u.leg||[]).forEach(x=>{x.u=u.id;x.id=u.id+'.'+x.i;BY[x.id]=x;});   // Aufgaben der Legendary challenge (nur in Bausteinen mit legendary.txt)
   UNIT[u.id]=u;
 };
 (window.GT_PRE||[]).forEach(window.GT_UNIT);
@@ -692,9 +751,11 @@ function record(it,first,typo){
   const T=touchU(it.u).tags;
   if(it.g){const t=T[it.g]||(T[it.g]=[0,0]);t[1]++;if(!first)t[0]++;}
   if(typo){const t=T.SP||(T.SP=[0,0]);t[0]++;t[1]++;}
+  stat(first); save();
+}
+function stat(first){ // zählt eine Aufgabe für „Today“ und die Sessions (auch die neuen Aufgaben der Legendary challenge)
   touchDay(); if(S.today.items===0){S.sess.n++;S.sess.last=S.today.d;}
   S.today.items++;S.sess.items++; if(first){S.today.right++;S.sess.right++;}
-  save();
 }
 function warmPool(){
   const ids=[]; Object.keys(UNIT).forEach(u=>UNIT[u].ids.forEach(id=>ids.push(id)));
@@ -722,16 +783,18 @@ function wearNow(){const o=wearOpts(),has=w=>o.some(x=>x[0]===w);if(has(S.wear))
 /* ---------- Durchlauf starten ---------- */
 function start(kind,uid,L,n,preview){
   if(kind==='cp'&&!preview&&cpLocked(getU(uid),L))return toast('The checkpoint opens when both sets have 90%.');
+  if(kind==='leg'&&!(UNIT[uid].leg&&(preview||legOpen(getU(uid)))))return toast('The Legendary challenge opens after the Advanced checkpoint.');
   let items, title;
   if(kind==='place'){items=pool(uid,'e');title='Placement test';}
   else if(kind==='warm'){items=warmPool();title='Warm-up';uid=null;}
+  else if(kind==='leg'){items=drawLeg(UNIT[uid],preview?{}:S.it,preview?{}:(S.lgs||{}),Math.random);title='Legendary challenge';L=null;}
   else if(kind==='set'){items=drawSet(UNIT[uid].sets[L][n-1].p.map(x=>pool(uid,x)),10,preview?{}:S.it,Math.random);title=LV[L].sym+' '+setName(uid,L,n);}
   else{ // Checkpoint: 6 aus dem Checkpoint-Pool, 4 wenig gesehene Set-Items
     const sets=UNIT[uid].sets[L].flatMap(s=>s.p).map(x=>pool(uid,x)).flat();
     items=shuffle(drawFrom(pool(uid,L+'c'),6,preview?{}:S.it,Math.random).concat(drawFrom(sets,4,preview?{}:S.it,Math.random)),Math.random);
     title=LV[L].sym+' '+LV[L].n+' checkpoint';
   }
-  run={kind,uid,L,n,items,i:0,pts:0,res:[],phase:'ask',try:1,typoUsed:false,preview:!!preview,title,row:0,opts:null,won:0};
+  run={kind,uid,L,n,items,i:0,pts:0,res:[],phase:'ask',try:1,typoUsed:false,preview:!!preview,title,row:0,opts:null,won:0,sel:null,spotW:null};
   if(!preview&&uid){S.cur=uid;save();}
   view='run'; render();
 }
@@ -750,6 +813,14 @@ const TICK=' <svg class="tick" viewBox="0 0 24 24" width="22" height="22" role="
 const LOCK='<svg class="lock" viewBox="0 0 24 24" width="20" height="20" role="img" aria-label="locked"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 11V8a3.500 3.500 0 0 1 7 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
 const MARKWORD=['not started','started','done','shown in the placement test','done'];
 const NDTICK='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 12.500l4.500 5.500L20 4" fill="none" stroke="var(--ok)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// Legendary challenge: Stern in Gold (Überschriften, Pfad, Startseite) und Siegel auf der Regelkarte nach dem Advanced-Checkpoint
+const STARP='M12 2.600l2.800 6 6.500.7-4.900 4.400 1.400 6.400L12 16.800l-5.800 3.300 1.400-6.400L2.700 9.300l6.500-.7z';
+const star=(sz,filled,label)=>'<svg class="star" viewBox="0 0 24 24" width="'+(sz||20)+'" height="'+(sz||20)+'" '+(label?'role="img" aria-label="'+label+'"':'aria-hidden="true"')+'><path d="'+STARP+'" fill="'+(filled===false?'none':'var(--gold)')+'" stroke="var(--gold)" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+const SEALP='M20.0 1.4 23.1 4.5 27.1 2.8 28.8 6.9 33.2 6.8 33.1 11.2 37.2 12.9 35.5 16.9 38.6 20.0 35.5 23.1 37.2 27.1 33.1 28.8 33.2 33.2 28.8 33.1 27.1 37.2 23.1 35.5 20.0 38.6 16.9 35.5 12.9 37.2 11.2 33.1 6.8 33.2 6.9 28.8 2.8 27.1 4.5 23.1 1.4 20.0 4.5 16.9 2.8 12.9 6.9 11.2 6.8 6.8 11.2 6.9 12.9 2.8 16.9 4.5z';
+function seal(leg){ // Siegel: Haken nach dem Advanced-Checkpoint, Stern nach der Legendary challenge
+  return '<svg class="seal" viewBox="0 0 40 40" width="46" height="46" role="img" aria-label="'+(leg?'Legendary challenge passed':'Advanced complete')+'"><path d="'+SEALP+'" fill="var(--gold)"/><circle cx="20" cy="20" r="12.500" fill="none" stroke="#fff" stroke-width="1.400" opacity=".85"/>'+
+    (leg?'<path d="'+STARP+'" transform="translate(11 11) scale(.75)" fill="#fff"/>':'<path d="M14 20.500l4.200 4.300L26.500 15.500" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>')+'</svg>';
+}
 
 /* ---------- Darstellung eines Items ---------- */
 function splitSrc(x){const k=x.indexOf(' \u2192 ');return k<0?['',x]:[x.slice(0,k),x.slice(k+3)];}
@@ -800,7 +871,7 @@ function render(keep){
   const cf=$('.cf'); if(cf&&!(view==='run'&&run&&run.i>=run.items.length))cf.remove();   // Konfetti nur auf der Ergebnisseite
   if(view==='home')a.innerHTML=homeHTML();
   else if(view==='path')a.innerHTML=pathHTML();
-  else if(view==='run')a.innerHTML=run.i>=run.items.length?endHTML():runHTML();
+  else if(view==='run')a.innerHTML=run.kind==='leg'?(run.i>=run.items.length?legEndHTML():legHTML()):run.i>=run.items.length?endHTML():runHTML();
   else if(view==='les')a.innerHTML=lessonHTML();
   else if(view==='finish')a.innerHTML=finishHTML();
   else if(view==='restore')a.innerHTML=restoreHTML();
@@ -836,8 +907,8 @@ function homeHTML(){
   if(ns.k==='done')go='<p class="go">Every open topic is complete.<small>Open a topic to play any set again.</small></p>';
   else{const g=goLabel(ns);go='<button class="go" data-act="go"><span class="hl">'+esc(g[0])+'</span><small>'+esc(g[1])+'</small></button>';}
   // Der Pfad: alle Bausteine in fester Reihenfolge. Nummer = Platz im Pfad, Haken = ganz geschafft, Textmarker = hier geht es weiter.
-  const row=(u,k)=>{const U=S.units[u.id], m=LVS.map((L,i)=>levelMark(U,i)), fin=!!U&&nextStep(U).k==='done', cur=u.id===cu;
-    return '<li class="'+(fin?'fin':cur?'cur':'')+(u.on?'':' off')+'"><button class="ir" data-act="unit" data-u="'+u.id+'" aria-label="'+(k+1)+'. '+esc(u.name)+(u.on?'. '+LVS.map((L,i)=>LV[L].n+' '+MARKWORD[m[i]]).join(', '):', not open yet')+'"><span class="nd">'+(fin?NDTICK:k+1)+'</span><span class="nm">'+(cur?'<span class="hl">'+esc(u.name)+'</span>':esc(u.name))+'</span><span class="mk">'+m.map((x,i)=>pm(i,x===2&&i===2?4:x,24)).join('')+'</span></button></li>';};
+  const row=(u,k)=>{const U=S.units[u.id], m=LVS.map((L,i)=>levelMark(U,i)), fin=!!U&&nextStep(U).k==='done', cur=u.id===cu, lg=legDone(U);   // goldener Stern: Legendary challenge bestanden
+    return '<li class="'+(fin?'fin':cur?'cur':'')+(u.on?'':' off')+'"><button class="ir" data-act="unit" data-u="'+u.id+'" aria-label="'+(k+1)+'. '+esc(u.name)+(u.on?'. '+LVS.map((L,i)=>LV[L].n+' '+MARKWORD[m[i]]).join(', ')+(lg?', Legendary challenge passed':''):', not open yet')+'"><span class="nd">'+(fin?NDTICK:k+1)+'</span><span class="nm">'+(cur?'<span class="hl">'+esc(u.name)+'</span>':esc(u.name))+'</span><span class="mk">'+m.map((x,i)=>pm(i,x===2&&i===2?4:x,24)).join('')+(lg?star(24):'')+'</span></button></li>';};
   return '<header class="top"><span class="brand">'+esc(SITE)+'</span><span class="wkk">'+(st?'streak <b>'+st+(st===1?' week':' weeks')+'</b>':'no streak yet')+'</span></header>'+
     (needsHomeTip()?'<div class="tip" id="hometip"><b>Add this website to your Home Screen</b>In Safari, tap Share (on newer devices it is under \u201C\u22EF\u201D), then \u201CAdd to Home Screen\u201D. After that, always open the website with the new icon, so your progress stays safe.</div>':'')+
     '<section class="hero"><div>'+doggo(wearNow())+'</div><div><p class="say">'+esc(homeSay())+'</p>'+go+'</div></section>'+
@@ -872,7 +943,17 @@ function stations(uid){
   return out;
 }
 function defaultSel(uid){const U=getU(uid);if(!U.st)return 'place';   // nur bei eingeschalteter Einstufung
-  const ns=stepOf(uid);const n=stations(uid).find(s=>s.next);return n?n.i:null;}
+  const ns=stepOf(uid);const n=stations(uid).find(s=>s.next);return n?n.i:legHere(uid)&&!legDone(U)?'leg':null;}   // alles geschafft: die Legendary challenge aufklappen
+const legHere=uid=>!!(UNIT[uid]&&UNIT[uid].leg&&legOpen(getU(uid)));   // Challenge da (legendary.txt) und offen (Advanced-Checkpoint bestanden)
+function legRowHTML(uid){ // die verborgene goldene Stufe im Pfad, erst nach dem Advanced-Checkpoint sichtbar
+  if(!legHere(uid))return '';
+  const U=getU(uid), lg=U.lg||[0,0,0], done=legDone(U), open=vs.sel==='leg';
+  const body='<p class="cq">'+esc(SAY.lgGo[lg[0]%SAY.lgGo.length])+'</p><p>'+LEGN+' tasks without the rule card and without second tries. You pass with '+LEGN+' of '+LEGN+'.'+(lg[0]&&!done?' Best so far: '+lg[2]+' of '+LEGN+'.':'')+'</p>'+
+    '<button class="btn gold" data-act="start" data-k="leg">'+(done?'Play again':'Start the challenge')+'</button>';
+  return '<section class="lv leg"><h2 class="sq">'+star(22)+' Legendary'+squig.replace('var(--red)','var(--gold)')+'</h2><ol class="rows"><li class="'+(done?'':'nx')+'"><button class="rw" data-act="sel" data-i="leg" aria-expanded="'+open+'">'+star(28,done)+
+    '<span class="nm">'+(done?'Legendary challenge':'<span class="hl">Legendary challenge</span>')+'</span>'+(done?'':'<span class="mini">'+dogga('stern')+'</span>')+
+    '<span class="sc'+(done?'':' no')+'">'+(done?LEGN+' of '+LEGN:lg[0]?'best '+lg[2]+' of '+LEGN:'new')+'</span></button>'+(open?'<div class="xp">'+body+'</div>':'')+'</li></ol></section>';
+}
 function pathHTML(){
   const id=vs.unit, D=UNIT[id], U=getU(id), st=stations(id), ns=stepOf(id), stIx=U.st?LVS.indexOf(U.st):-1;
   const row=n=>{
@@ -907,7 +988,7 @@ function pathHTML(){
     h+='<section class="lv"><h2 class="sq">'+LV[L].sym+' '+LV[L].n+squig+'</h2>'+(stIx>ix&&!U.lv[L].c[1]?'<em>shown in the placement test</em>':'')+
       '<ol class="rows">'+st.filter(n=>n.L===L).map(row).join('')+'</ol></section>';
   });
-  return h;
+  return h+legRowHTML(id);
 }
 /* ---------- Mini-Lektion: oben das Blatt, unten Doggos Textfeld. Ablauf: Erklärung (x) -> Ansage (intro) -> Check (c) -> Karte (end) ---------- */
 const SAYL={intro:["Now it\u2019s your turn. Get both questions right and the set opens.","Two quick questions for you. If both are right, the set opens.","Let\u2019s see if it stuck. Two questions, then the set opens."],
@@ -1025,7 +1106,8 @@ function cardHTML(uid,whole){
   let upto=ns.k==='done'?2:ns.L?LVS.indexOf(ns.L):0;
   if(run&&run.uid===uid&&run.L)upto=Math.max(upto,LVS.indexOf(run.L));
   if(les&&les.uid===uid)upto=Math.max(upto,LVS.indexOf(les.L));
-  let h='<div class="rules"><h1>'+esc(D.ruleTitle)+'</h1><p class="ctop"><b>'+esc(C.top[0])+'</b> '+esc(C.top[1])+'</p>'+(C.key?'<div class="board ckey">'+boardHTML(C.key,C.key,'')+'</div>':'');
+  const gold=!whole&&!!U.lv.p.c[1];   // nach dem Advanced-Checkpoint: goldener Rahmen mit Siegel (Paul, 16. Oktober 2026), nach der Legendary challenge mit Stern
+  let h='<div class="rules'+(gold?' gold':'')+'">'+(gold?seal(legDone(U)):'')+'<h1>'+esc(D.ruleTitle)+'</h1><p class="ctop"><b>'+esc(C.top[0])+'</b> '+esc(C.top[1])+'</p>'+(C.key?'<div class="board ckey">'+boardHTML(C.key,C.key,'')+'</div>':'');
   LVS.forEach((L,ix)=>{
     const mine=C.lines.filter(c=>c.s[0]===L); if(!mine.length)return;
     if(!whole&&ix>upto)return;
@@ -1060,6 +1142,61 @@ function runHTML(){
   }else if(it.t!=='mc'){
     h+='<div class="acts"><button class="btn" data-act="check">'+(run.kind==='place'?'Next':'Check')+'</button>'+(it.t==='fix'?'<button class="btn sec" data-act="nomistake">No mistake</button>':'')+(run.kind==='place'?'<button class="btn quiet" data-act="skip">I don\u2019t know</button>':'')+'</div>';
   }
+  return h;
+}
+/* ---------- Legendary challenge: 20 Aufgaben ohne Regelkarte und ohne Rückmeldung bis zum Ende (Paul, 23. Oktober 2026: „Erst am Ende auswerten“) ---------- */
+const hiMark=x=>esc(x).replace(/\*(.+?)\*/,'<mark>$1</mark>');
+const glue=h=>h.replace(/ (\+|\u2192) /g,'\u00A0$1\u00A0');   // „verb + -s“ und „→“ nicht umbrechen
+const STOPL='Stop here? This round does not count.';
+function legHTML(){
+  const it=BY[run.items[run.i]], r=run.cur||{}, n=run.items.length, typed=it.t==='gap'||it.t==='fix'||it.t==='rule';
+  let h=(run.preview?'<div class="banner">Vorschau: nichts wird gespeichert.</div>':'')+
+    '<div class="it-top"><button class="it-x" data-act="quit" aria-label="Stop and leave">'+IC.close+'</button><div class="it-bar gold"><i style="width:'+Math.round(run.i/n*100)+'%"></i></div><span class="it-n">'+(run.i+1)+' of '+n+'</span></div>'+
+    '<div class="it-where leg"><span>'+star(18)+' Legendary challenge</span></div>';
+  const next=dis=>'<div class="acts"><button class="btn" data-act="lgnext"'+(dis?' disabled':'')+'>Next</button></div>';
+  if(it.t==='gap'||it.t==='fix'){
+    h+='<p class="it-task">'+esc(taskLine(it))+'</p><div class="it-text">'+itemHTML(it,{inputs:r.given,disabled:false})+'</div>';
+    if(it.t==='fix')h+='<div class="fixin"><input type="text" id="g0" value="'+esc((r.given||[])[0]||'')+'" placeholder="correct form" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Correct form"></div>';
+  }else if(it.t==='rule'){
+    const size=Math.max(8,Math.min(20,it.h[0].length+4));
+    h+='<p class="it-task">Complete the rule.</p><div class="it-text">'+esc(it.x).replace('___','<input type="text" id="g0" size="'+size+'" value="'+esc((r.given||[])[0]||'')+'" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="Missing word">')+'</div>';
+  }else if(it.t==='spot'&&run.phase!=='spot2'){
+    h+='<p class="it-task">One part of this sentence is wrong. Tap it.</p><div class="it-text lgspot">'+it.k.map((w,k)=>'<button class="tw'+(run.sel===k?' on':'')+'" data-act="lgword" data-k="'+k+'" aria-pressed="'+(run.sel===k)+'">'+esc(w)+'</button>').join(' ')+'</div>'+next(run.sel===null);
+  }else{   // Why?, Which rule? und der zweite Schritt von Spot it: Grund oder Zeile antippen, dann „Next“
+    const x=it.t==='spot'?it.k.map((w,k)=>k===run.spotW?'<mark>'+esc(w)+'</mark>':esc(w)).join(' '):hiMark(it.x);
+    if(!run.opts)run.opts=shuffle([it.c].concat(it.w),Math.random);
+    h+='<p class="it-task">'+(it.t==='which'?'Which rule explains the highlighted form?':it.t==='spot'?'Why is it wrong?':'Choose the right reason.')+'</p><div class="it-text">'+x+'</div>'+(it.t==='why'?'<p class="lgq">'+esc(it.q)+'</p>':'')+
+      '<div class="opts">'+run.opts.map((o,k)=>'<button class="opt'+(run.sel===k?' sel':'')+'" data-act="lgsel" data-k="'+k+'" aria-pressed="'+(run.sel===k)+'">'+glue(nobr(esc(o)))+'</button>').join('')+'</div>'+next(run.sel===null);
+  }
+  if(run.phase==='retry')h+='<div class="fb no" role="status"><div class="dgw">'+doggo('none','confused')+'</div><div class="tx"><span class="v">Check your spelling.</span></div></div>';
+  if(typed)h+='<div class="acts"><button class="btn" data-act="check">Next</button>'+(it.t==='fix'?'<button class="btn sec" data-act="nomistake">No mistake</button>':'')+'<button class="btn quiet" data-act="skip">I don’t know</button></div>';
+  return h;
+}
+function legNext(){ // Auswahl bestätigen. Spot it hat zwei Schritte: erst das Wort, dann der Grund
+  const it=BY[run.items[run.i]]; if(run.sel===null||run.phase==='fb')return;
+  if(it.t==='spot'&&run.phase!=='spot2'){run.spotW=run.sel;run.sel=null;run.opts=null;run.phase='spot2';return render();}
+  const o=run.opts[run.sel];
+  if(it.t==='spot'){const w=run.spotW, ok=w>=it.e[0]&&w<=it.e[1]&&o===it.c;return finishItem(it,ok,ok?1:0,{w,o},null,false);}
+  const ok=o===it.c; finishItem(it,ok,ok?1:0,o,null,false);
+}
+function legCorrHTML(){ // am Ende alle Fehler auf einen Blick: die richtige Lösung und der Grund
+  const wrong=run.res.filter(r=>!r.ok); if(!wrong.length)return '';
+  const pair=(g,c)=>'<span class="lgo"><del>'+esc(g||'–')+'</del></span><span class="lgo"><ins>'+esc(c)+'</ins></span>';
+  return '<h2 class="sub">Corrections</h2>'+wrong.map(r=>{const it=BY[r.id]; let s='', why='';
+    if(it.t==='gap'||it.t==='fix'){s=solvedHTML(it,r);why=whyOf(it);}
+    else if(it.t==='rule')s=glue(esc(it.x)).replace('___','<del class="nw">'+esc((r.given||[])[0]||'–')+'</del> <ins class="nw">'+esc(it.h[0])+'</ins>');
+    else if(it.t==='spot'){const g=r.given||{};
+      s=it.k.map((w,k)=>k<it.e[0]||k>it.e[1]?esc(w):k===it.e[0]?'<del>'+esc(it.k.slice(it.e[0],it.e[1]+1).join(' ').replace(/[.,!?;:]+$/,''))+'</del> <ins>'+esc(it.h)+'</ins>'+esc((it.k[it.e[1]].match(/[.,!?;:]+$/)||[''])[0]):'').filter(x=>x!=='').join(' ');
+      why=(g.w>=it.e[0]&&g.w<=it.e[1]?'':'You tapped “'+it.k[g.w]+'”. ')+it.c;}
+    else s=hiMark(it.x)+(it.t==='why'?' <b>'+esc(it.q)+'</b>':'')+pair(r.given,it.c);
+    return '<div class="corr">'+s+(why?'<small>'+esc(why)+'</small>':'')+'</div>';}).join('');
+}
+function legEndHTML(){
+  const n=run.items.length, pass=run.pts>=n; let h=run.preview?'<div class="banner">Vorschau: nichts wurde gespeichert.</div>':'';
+  h+='<p class="legtag">'+star(18)+' Legendary challenge</p><div class="grade'+(pass?' gold':' lo')+'">'+run.pts+' of '+n+squigC+'</div>'+
+    '<p class="resline">'+(pass?'You passed the Legendary challenge.':'You need '+n+' of '+n+'. Try again whenever you like.')+'</p>'+
+    '<div class="coach"><div>'+dogga(pass?'':'stern')+'</div><p>'+esc(run.endLine)+'</p></div>'+wonHTML()+legCorrHTML()+
+    '<div class="acts">'+(pass?'':'<button class="btn gold" data-act="legagain">Try again</button>')+'<button class="btn'+(pass?'':' sec')+'" data-act="topath">'+(run.preview?'Zurück zur Lehreransicht':'Back to the path')+'</button></div>';
   return h;
 }
 function wonHTML(){
@@ -1099,6 +1236,7 @@ function endHTML(){
     const pass=pct>=PASS, lv=U.lv[run.L], ws=lv.r||1, ag=run.preview?0:lesList(run.uid,run.L,ws).filter(m=>(lv.l||[])[m-1]===2).length;
     h+='<p class="resline">'+(pass?'You passed '+LV[run.L].n+'.':'You need 90%.'+(run.preview?'':' Best next step: \u201C'+esc(setName(run.uid,run.L,ws))+'\u201D'+(ag?', with Doggo\u2019s lesson'+(ag>1?'s':'')+' first':'')+'.'+(lv.c[0]>=2?' Read the rule card first and ask your teacher about the corrections below.':'')))+'</p>'+
       '<div class="coach"><div>'+dogga(pass?'':'stern')+'</div><p>'+esc(run.endLine)+'</p></div>'+wonHTML();
+    if(run.news)h+='<div class="legnews" id="legnews"><b>'+star(20)+' The Legendary challenge is open</b><p>A hidden level after Advanced: '+LEGN+' tasks without the rule card. Only '+LEGN+' of '+LEGN+' counts. The prize is Doggo’s legendary costume.</p><button class="btn gold" data-act="legopen">Show me</button></div>';
     if(pass&&run.L==='k'&&!run.preview&&advOpen(U)){const nx=curUnit();
       if(nx&&nx!==run.uid)h+='<p class="txt" id="advhint">'+LV.p.sym+' Advanced is open now if you want more. It is optional: \u201CContinue\u201D on the start page takes you to '+esc(UMETA[nx].name)+'.</p>';}
   }
@@ -1165,7 +1303,7 @@ function teacherHTML(){
         if(o.d&&(Date.now()-new Date(o.d).getTime())/864e5>14)flags.push('\u00FCber 14 Tage inaktiv');
         const wk=o.wk?streakNow({last:o.wk[0],run:o.wk[1]},dayStr()):0;
         h+='<tr><td>'+esc(r.who)+'<br><span class="mute">'+esc(o.d||'')+'</span></td><td>'+(+o.n||0)+'</td><td>'+(+o.m||0)+'</td><td>'+(q===null?'\u2013':q+'%<br><span class="mute">'+o.q[1]+' Items</span>')+'</td><td>'+wk+(o.wk&&o.wk[2]>wk?'<br><span class="mute">l\u00E4ngste: '+(+o.wk[2])+'</span>':'')+'</td><td>'+
-          (uids.map(uid=>'<b>'+esc(UMETA[uid]?UMETA[uid].name:uid)+'</b><br>'+[0,1,2].map(i=>lvLine(o.u[uid],i)).join('<br>')).join('<br>')||'\u2013')+'</td><td>'+
+          (uids.map(uid=>'<b>'+esc(UMETA[uid]?UMETA[uid].name:uid)+'</b><br>'+[0,1,2].map(i=>lvLine(o.u[uid],i)).join('<br>')+((+o.u[uid].to||0)&2?'<br>'+star(16)+' Legendary challenge bestanden':'')).join('<br>')||'\u2013')+'</td><td>'+
           (errs.sort((a,b)=>b[0]-a[0]).slice(0,3).map(e=>esc(e[1])+' ('+e[0]+')').join('<br>')||'\u2013')+'</td><td class="flag">'+[...new Set(flags)].join('<br>')+'</td>'+
           '<td><button class="lk" data-act="tlink" data-ix="'+ix+'">Link zeigen</button></td></tr>';
       });
@@ -1182,10 +1320,17 @@ function teacherHTML(){
     groups.forEach(g=>{const ids=g[1].flatMap(x=>pool(uid,x));h+='<details><summary><b>'+esc(g[0])+'</b> ('+ids.length+' Items)</summary>'+ids.map(id=>{const it=BY[id];
       const sol=it.t==='mc'?esc(it.c)+' <span class="mute">(nicht: '+esc(it.w.join(', '))+')</span>':it.a.map(a=>esc(a.join(' / '))).join(' \u00B7 ');
       return '<div class="sol"><code>'+id+'</code>'+esc(it.x)+'<br><b>'+sol+'</b>'+(it.f?' <span class="mute">'+esc(it.f)+'</span>':'')+'</div>';}).join('')+'</details>';});
+    if(D.leg){   // Legendary challenge: Aufgaben mit L\u00F6sungen, nach Art
+      const not=it=>' <span class="mute">(nicht: '+esc(it.w.join(' / '))+')</span>';
+      h+='<details><summary><b>'+star(16)+' Legendary challenge</b> ('+D.leg.length+' eigene Aufgaben, dazu pro Durchgang 6 Items aus den Sets und Checkpoints)</summary><p class="txt">Pro Durchgang 20 Aufgaben: 6 Items (2 pro Stufe, nur tippen oder Fehler finden), 3 \u00D7 Complete the rule, 4 \u00D7 Spot it, then say why, 3 \u00D7 Why?, 4 \u00D7 Which rule?. Ohne Regelkarte, R\u00FCckmeldung erst am Ende, bestanden mit 20 von 20.</p>'+
+        [['rule','Complete the rule'],['spot','Spot it, then say why'],['why','Why?'],['which','Which rule?']].map(([t,nm])=>'<p class="tsec" style="font-size:17px">'+nm+'</p>'+D.leg.filter(x=>x.t===t).map(it=>'<div class="sol les"><code>'+esc(it.id)+'</code>'+
+          (t==='rule'?esc(it.x)+'<br><b>'+esc(it.a[0].join(' / '))+'</b>':t==='spot'?esc(it.x)+' \u2192 <b>'+esc(it.h)+'</b><br><b>'+esc(it.c)+'</b>'+not(it):t==='why'?esc(it.x)+' '+esc(it.q)+'<br><b>'+esc(it.c)+'</b>'+not(it):esc(it.x)+' <span class="mute">(aus '+esc(it.src)+')</span><br><b>'+esc(it.c)+'</b>'+not(it))+'</div>').join('')).join('')+'</details>';
+    }
   }else if(tView.tab==='vorschau'){
     const uid=tView.unit, D=UNIT[uid];
     h+=unitTabs+'<p class="txt">Jede Stelle l\u00E4sst sich direkt \u00F6ffnen. In der Vorschau wird nichts gespeichert.</p><div class="acts"><button class="btn sec" data-act="pv" data-k="place">Einstufung'+(CONFIG.PLACEMENT?'':' (f\u00FCr Sch\u00FCler:innen aus)')+'</button><button class="btn sec" data-act="rules" data-u="'+uid+'">Regelkarte</button></div>';
     LVS.forEach(L=>{h+='<h2 class="tsec">'+LV[L].sym+' '+LV[L].n+'</h2><div class="acts">'+D.sets[L].map((s,k)=>'<button class="btn sec sm" data-act="pv" data-k="set" data-l="'+L+'" data-n="'+(k+1)+'">'+esc(s.n)+'</button>').join('')+'<button class="btn sec sm" data-act="pv" data-k="cp" data-l="'+L+'">Checkpoint</button></div>'+(D.has[L].some(x=>x.length)?'<div class="acts">'+D.has[L].flatMap((ms,k)=>ms.map(m=>'<button class="btn quiet sm" data-act="pvles" data-l="'+L+'" data-n="'+(k+1)+'" data-m="'+m+'">Lektion: '+esc(D.lessons[L+m].t)+'</button>')).join('')+'</div>':'');});
+    if(D.leg)h+='<h2 class="tsec">'+star(20)+' Legendary</h2><div class="acts"><button class="btn sec sm" data-act="pv" data-k="leg">Legendary challenge</button></div>';
   }else{
     h+='<p class="txt">Stand der Website: '+esc(BUILD)+'. Offene Bausteine: '+on.map(id=>esc(UMETA[id].name)+' (Inhalte vom '+esc(UNIT[id].date)+')').join(', ')+'. Popkultur-Fakten einmal pro Halbjahr pr\u00FCfen lassen.</p>'+
       '<p class="txt">Formular-Link, PIN und Einstufung stehen oben in der Datei index.html im Abschnitt \u201EEINSTELLUNGEN\u201C. Formular-Link gesetzt: '+(CONFIG.FORM_PREFILL?'ja':'nein')+'. Einstufung: '+(CONFIG.PLACEMENT?'an':'aus, jeder Baustein beginnt bei Basic')+'.</p>'+
@@ -1207,8 +1352,8 @@ function sayFor(it,ok,pts){ // Doggo ist nach Fehlern da und ab und zu nach Erfo
   return {fig:null,line:'Right.'};
 }
 function finishItem(it,ok,pts,given,each,typo){
-  const res={id:it.id,ok,pts,given,each}; run.res.push(res); run.pts+=pts;
-  if(run.kind==='place')return next();
+  const res={id:it.id,ok,pts,given,each,typo:!!typo}; run.res.push(res); run.pts+=pts;
+  if(run.kind==='place'||run.kind==='leg')return next();   // ohne Rückmeldung bis zum Ende (Legendary challenge: gebucht wird erst in closeRun)
   res.say=sayFor(it,ok,pts); run.cur={given:Array.isArray(given)?given:[]}; run.phase='fb';
   if(!run.preview)record(it,ok&&pts===1,typo);
   render(); const b=$('#nextbtn'); if(b)b.focus({preventScroll:true});
@@ -1236,7 +1381,7 @@ function settle(it,j,given,allowRetry){
 }
 function pick(v){const it=BY[run.items[run.i]], ok=v===it.c; finishItem(it,ok,ok?1:0,v,null,false);}
 function next(){
-  run.i++; run.phase='ask'; run.try=1; run.typoUsed=false; run.cur=null; run.opts=null;
+  run.i++; run.phase='ask'; run.try=1; run.typoUsed=false; run.cur=null; run.opts=null; run.sel=null; run.spotW=null;
   if(run.i>=run.items.length)closeRun();
   render();
 }
@@ -1252,6 +1397,15 @@ function closeRun(){
     if(!run.preview){const U=touchU(run.uid),e0=earned(U);U.pl=pl;U.st=o.st;U.to=o.to;costume(U,e0);week();save();}
     return;
   }
+  if(run.kind==='leg'){ // bestanden nur mit allen Aufgaben richtig. Gebucht wird erst jetzt: Abbrechen zählt nicht.
+    const pass=run.pts>=n; run.party=pass; run.endLine=pass?pickLine('lgPass',SAY.lgPass):pickLine('lgFail',SAY.lgFail);
+    if(run.preview)return;
+    const U=touchU(run.uid), e0=earned(U); if(!Array.isArray(U.lg))U.lg=[0,0,0];
+    U.lg[0]++; U.lg[2]=Math.max(U.lg[2],run.pts); if(pass)U.lg[1]=1;
+    if(!S.lgs)S.lgs={};
+    run.res.forEach(r=>{const it=BY[r.id]; if(it.t==='gap'||it.t==='fix')record(it,r.ok,r.typo); else{S.lgs[it.id]=r.ok?2:1;stat(r.ok);}});
+    costume(U,e0); week(); save(); return;
+  }
   if((run.kind==='set'&&pct===100)||(run.kind==='cp'&&pct>=PASS))run.party=true;   // Konfetti beim Ergebnis: Set bei 100 %, Checkpoint bei jedem Bestehen (Paul, 16. Oktober 2026)
   if(run.kind==='set'){const s=statusFor(pct);run.endLine=pct===100?pickLine('perfect',SAY.perfect):pickLine('set'+s,SAY['set'+s]);}
   else if(run.kind==='cp')run.endLine=pct>=PASS?pickLine('cpPass',SAY.cpPass):pickLine('cpFail',SAY.cpFail);
@@ -1262,6 +1416,8 @@ function closeRun(){
   else{lv.c[0]++;lv.c[2]=Math.max(lv.c[2],pct);
     if(pct>=PASS){lv.c[1]=1;lv.r=0;}
     else{const w=weakSet(lv);lv.r=w;if(lv.c[0]===1){if(!Array.isArray(lv.l))lv.l=[0,0,0,0];lesList(run.uid,run.L,w).forEach(m=>{lv.l[m-1]=2;});}}   // beim ersten Fehlschlag: Lektionen des schwächsten Sets noch einmal
+    // Advanced bestanden: Dogga kündigt die Legendary challenge an (nur in Bausteinen, die schon Aufgaben dafür haben, und solange sie nicht bestanden ist)
+    if(pct>=PASS&&run.L==='p'&&UNIT[run.uid].leg&&!legDone(U)){run.news=true;run.endLine=pickLine('lgNews',SAY.lgNews);}
   }
   costume(U,e0); week(); save();
 }
@@ -1301,7 +1457,11 @@ document.addEventListener('click',e=>{
   if(act==='reload')return location.reload();
   if(act==='home'){if(midRun())return;run=null;les=null;view='home';tView.ok=false;return render();}
   if(act==='askyes'||act==='askno'){const f=askYes;askYes=null;$('#layer').innerHTML='';if(act==='askyes'&&f)f();return;}
-  if(act==='quit')return ask(STOPQ,'Stop','Keep going',leaveRun);
+  if(act==='quit')return ask(run&&run.kind==='leg'?STOPL:STOPQ,'Stop','Keep going',leaveRun);
+  if(act==='lgsel'||act==='lgword'){if(run&&run.phase!=='fb'){run.sel=+t.dataset.k;render(true);}return;}
+  if(act==='lgnext')return legNext();
+  if(act==='legagain'){const uid=run.uid,pv=run.preview;return start('leg',uid,null,0,pv);}
+  if(act==='legopen'){const uid=run.uid;run=null;return loadUnit(uid).then(()=>{vs.unit=uid;vs.sel='leg';view='path';render();},fail);}
   if(act==='topath')return leaveRun();
   if(act==='unit')return openUnit(t.dataset.u);
   if(act==='lesson')return startLesson(vs.unit,t.dataset.l,t.dataset.n,t.dataset.m,false,!!t.dataset.skip);
@@ -1346,6 +1506,7 @@ document.addEventListener('keydown',e=>{
   if(view==='les'&&les&&e.target.tagName!=='BUTTON'){e.preventDefault();return lessonNext();}
   if(view!=='run'||!run)return;
   if(e.target.tagName==='INPUT'&&run.phase!=='fb'){e.preventDefault();check(false);}
+  else if(run.kind==='leg'&&e.target.tagName!=='BUTTON'&&run.sel!==null){e.preventDefault();legNext();}
 });
 
 /* ---------- Start ---------- */
