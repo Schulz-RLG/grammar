@@ -29,12 +29,10 @@ button,input,textarea{font:inherit;color:inherit}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 :focus-visible{outline:3px solid var(--pri);outline-offset:2px}
 h1,h2,h3,p{margin:0}
-/* Figuren (Pauls Bilder): feste Höhe pro Stelle, Figur unten mittig, weißer Rand wie ein Sticker. Gold: goldener Rand. */
+/* Figuren (Pauls Bilder): feste Höhe pro Stelle, Figur unten mittig, weißer Rand wie ein Sticker. Legendäre Kostüme sind eigene Bilder (seit dem 23. Oktober 2026), der goldene Rand ist weg. */
 .dg{display:block;width:100%;height:auto;object-fit:contain;object-position:50% 100%;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
   filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)}
-.dg.gold{filter:drop-shadow(3px 0 0 #E2A600) drop-shadow(-3px 0 0 #E2A600) drop-shadow(0 3px 0 #E2A600) drop-shadow(0 -3px 0 #E2A600)}
 .rw .mini .dg,.wear .dg{filter:drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff)}
-.rw .mini .dg.gold,.wear .dg.gold{filter:drop-shadow(2px 0 0 #E2A600) drop-shadow(-2px 0 0 #E2A600) drop-shadow(0 2px 0 #E2A600) drop-shadow(0 -2px 0 #E2A600)}
 .hero .dg{height:150px}.coach .dg{height:106px}.rw .mini .dg{height:56px}.fb .dgw .dg{height:76px}.dlg-fig .dg{height:107px}.won .dg{height:132px}.wear .dg{height:58px;width:50px}
 .wrap{max-width:660px;margin:0 auto;padding:18px 18px 56px}
 body[data-view="teacher"] .wrap{max-width:1000px}
@@ -301,37 +299,38 @@ const CONFIG = {
   PLACEMENT: false
 };
 /* ======================================================= */
-const SITE = "Grammar Training", BUILD = "2026-10-16a";
+const SITE = "Grammar Training", BUILD = "2026-10-23a";
 const UNITS = [{"id":"pr","name":"Simple present","on":true},{"id":"pa","name":"Simple past","on":true},{"id":"pp","name":"Present perfect","on":true},{"id":"fu","name":"Future forms","on":true},{"id":"qn","name":"Questions and word order","on":true},{"id":"if","name":"If-clauses","on":true},{"id":"aa","name":"Adjective or adverb","on":true},{"id":"ar","name":"Articles and quantifiers","on":true},{"id":"pv","name":"Passive","on":true},{"id":"de","name":"German mistakes","on":true},{"id":"rc","name":"Relative clauses","on":true},{"id":"ca","name":"Capitals and apostrophes","on":true},{"id":"rs","name":"Reported speech","on":true},{"id":"rg","name":"Formal or informal","on":true}];   // alle Bausteine in der Reihenfolge des Pfads: {id, name, on}
 
 /* ===== FIGUREN START (Quelle: figuren.js) ===== */
 /* Doggo und Dogga: Pauls eigene Bilder (Bögen vom 9. Oktober 2026). Vorher standen hier gezeichnete Platzhalter.
    Dies ist die EINZIGE Stelle für die Figuren und Kostüme. make.py setzt die Datei in index.html ein und erzeugt die
    Bilddateien fig-*.webp aus den Vorlagen in figuren/ (die figuren.py aus Pauls Bögen schneidet).
-   Aufruf: doggo(kostuem)          ganze Figur. kostuem: 'none', Baustein-Kürzel ('pr') oder Kürzel mit Plus für Gold ('pr+')
+   Aufruf: doggo(kostuem)          ganze Figur. kostuem: 'none', Baustein-Kürzel ('pr') oder Kürzel mit Plus für legendär ('pr+')
            doggo(kostuem, gesicht) Brustbild ohne Kostüm (jedes Kostüm gibt es nur mit einem Gesicht).
                                    gesicht: 'ok' fröhlich, 'happy' lachend, 'dry' kritisch, 'confused' verwirrt, 'surprised' überrascht
            dogga(gesicht)          Brustbild. gesicht: 'stern' kritisch (Checkpoint), sonst lachend
-   Gold: dasselbe Bild mit goldenem statt weißem Rand (Klasse "gold", Rand per CSS in site.template.html).
-   Neues Kostüm: Vorlage in figuren/ legen, in FIGFILES in make.py eintragen und unten in COSTUMES. */
+   Legendär (seit dem 23. Oktober 2026, ersetzt Gold mit goldenem Rand): eigenes Bild aus Pauls Bogen mit den legendären
+   Kostümen, Datei fig-doggo-<img>-legendary.webp. Speicherformat unverändert ('pr+').
+   Verdient nur mit der Legendary challenge (legDone in site.template.html). Bis es sie gibt, erscheint keine legendäre Fassung.
+   Neues Kostüm: beide Vorlagen in figuren/ legen, in FIGFILES in make.py eintragen und unten in COSTUMES. */
 const FACES={ok:'happy',happy:'laughing',dry:'critical',confused:'confused',surprised:'surprised'};
-/* Ein Eintrag pro Baustein: Bild, Name, Name der Gold-Variante, Doggos Spruch beim Freischalten.
-   Die Kostüme für rc, ca, rs und rg stehen schon hier. Sie erscheinen erst, wenn es den Baustein gibt. */
+/* Ein Eintrag pro Baustein: Bild, Name, Name der legendären Fassung, Doggos Spruch beim Freischalten. */
 const COSTUMES={
-  pr:{img:'scientist',name:'Scientist',gold:'Golden scientist',say:'Facts take the simple present, so here is one: this lab coat really suits me.'},
-  pa:{img:'viking',name:'Viking',gold:'Golden Viking',say:'This helmet comes straight from the past, and it fits surprisingly well.'},
-  pp:{img:'backpacker',name:'Backpacker',gold:'Golden backpacker',say:'I have never been to Australia, but I have already packed my bag.'},
-  fu:{img:'astronaut',name:'Astronaut',gold:'Golden astronaut',say:'Next year I am going to fly to the moon. I will probably forget the snacks.'},
-  qn:{img:'samurai',name:'Samurai',gold:'Golden samurai',say:'A samurai never asks “You are ready?” He asks “Are you ready?”'},
-  if:{img:'wizard',name:'Wizard',gold:'Golden wizard',say:'If I were a wizard, I would wear this. So I do.'},
-  aa:{img:'athlete',name:'Athlete',gold:'Golden athlete',say:'I run fast, I jump high and I look good while I do it.'},
-  ar:{img:'chef',name:'Chef',gold:'Golden chef',say:'A little salt, a few eggs and no idea what I am cooking.'},
-  pv:{img:'artist',name:'Artist',gold:'Golden artist',say:'This painting was made by me. It is said to be priceless.'},
-  de:{img:'knight',name:'Knight',gold:'Golden knight',say:'A good knight does not become a sword. He gets one.'},
-  rc:{img:'dj',name:'DJ',gold:'Golden DJ',say:'I am the DJ who plays the songs that nobody asked for.'},
-  ca:{img:'princess',name:'Princess',gold:'Golden princess',say:'It’s my crown, and I love its sparkle. Check the apostrophes, please.'},
-  rs:{img:'pilot',name:'Pilot',gold:'Golden pilot',say:'The captain said that we would land soon. I am the captain.'},
-  rg:{img:'gentleman',name:'Gentleman',gold:'Golden gentleman',say:'Would you be so kind as to admire my hat? Cheers, mate.'}
+  pr:{img:'scientist',name:'Scientist',leg:'Legendary scientist',say:'Facts take the simple present, so here is one: this lab coat really suits me.'},
+  pa:{img:'viking',name:'Viking',leg:'Legendary Viking',say:'This helmet comes straight from the past, and it fits surprisingly well.'},
+  pp:{img:'backpacker',name:'Backpacker',leg:'Legendary backpacker',say:'I have never been to Australia, but I have already packed my bag.'},
+  fu:{img:'astronaut',name:'Astronaut',leg:'Legendary astronaut',say:'Next year I am going to fly to the moon. I will probably forget the snacks.'},
+  qn:{img:'samurai',name:'Samurai',leg:'Legendary samurai',say:'A samurai never asks “You are ready?” He asks “Are you ready?”'},
+  if:{img:'wizard',name:'Wizard',leg:'Legendary wizard',say:'If I were a wizard, I would wear this. So I do.'},
+  aa:{img:'athlete',name:'Athlete',leg:'Legendary athlete',say:'I run fast, I jump high and I look good while I do it.'},
+  ar:{img:'chef',name:'Chef',leg:'Legendary chef',say:'A little salt, a few eggs and no idea what I am cooking.'},
+  pv:{img:'artist',name:'Artist',leg:'Legendary artist',say:'This painting was made by me. It is said to be priceless.'},
+  de:{img:'knight',name:'Knight',leg:'Legendary knight',say:'A good knight does not become a sword. He gets one.'},
+  rc:{img:'dj',name:'DJ',leg:'Legendary DJ',say:'I am the DJ who plays the songs that nobody asked for.'},
+  ca:{img:'princess',name:'Princess',leg:'Legendary princess',say:'It’s my crown, and I love its sparkle. Check the apostrophes, please.'},
+  rs:{img:'pilot',name:'Pilot',leg:'Legendary pilot',say:'The captain said that we would land soon. I am the captain.'},
+  rg:{img:'gentleman',name:'Gentleman',leg:'Legendary gentleman',say:'Would you be so kind as to admire my hat? Cheers, mate.'}
 };
 /* In der Vorschau-Datei stehen die Bilder als data:-Adressen in window.FIGDATA, auf der Website als eigene Dateien */
 function figSrc(n){return (window.FIGDATA&&window.FIGDATA[n])||('fig-'+n+'.webp');}
@@ -340,13 +339,13 @@ function figImg(n,cls,label){
 }
 function costumeOf(c){
   if(!c||c==='none')return null;
-  const gold=c.slice(-1)==='+',k=COSTUMES[gold?c.slice(0,-1):c];
-  return k?{k,gold}:null;
+  const leg=c.slice(-1)==='+',k=COSTUMES[leg?c.slice(0,-1):c];
+  return k?{k,leg}:null;
 }
 function doggo(c,mood){
   if(mood)return figImg('doggo-'+(FACES[mood]||'happy'),'face','Doggo');
   const cs=costumeOf(c);
-  return cs?figImg('doggo-'+cs.k.img,'full'+(cs.gold?' gold':''),'Doggo: '+(cs.gold?cs.k.gold:cs.k.name)):figImg('doggo','full','Doggo');
+  return cs?figImg('doggo-'+cs.k.img+(cs.leg?'-legendary':''),'full','Doggo: '+(cs.leg?cs.k.leg:cs.k.name)):figImg('doggo','full','Doggo');
 }
 function dogga(mood){return figImg('dogga-'+(mood==='stern'?'critical':'laughing'),'face','Dogga');}
 /* Die Gesichter nach einer Antwort vorab laden, damit sie ohne Verzögerung erscheinen */
@@ -547,8 +546,9 @@ function weekOf(day){const d=noon(day);d.setDate(d.getDate()-(d.getDay()+6)%7);r
 function weekBefore(w){const d=noon(w);d.setDate(d.getDate()-7);return ymd(d);}
 function streakNow(wk,day){const w=weekOf(day);return wk&&wk.last&&(wk.last===w||wk.last===weekBefore(w))?wk.run:0;}
 function markWeek(wk,day){const w=weekOf(day);if(wk.last===w)return false;wk.run=wk.last===weekBefore(w)?wk.run+1:1;wk.last=w;if(wk.run>(wk.best||0))wk.best=wk.run;return true;}
-// Kostüm: 1 = verdient (■ geschafft oder per Einstufung bei ▲ gestartet), 2 = Gold (▲ geschafft)
-function earned(U){if(!U)return 0;if(U.lv.p.c[1])return 2;return U.lv.k.c[1]||U.st==='p'?1:0;}
+// Kostüm: 1 = verdient (■ geschafft oder per Einstufung bei ▲ gestartet), 2 = legendär (nur nach bestandener Legendary challenge, Paul, 23. Oktober 2026)
+function legDone(U){return false;}   // Legendary challenge bestanden? Die Challenge gibt es noch nicht, bis dahin gibt es kein legendäres Kostüm
+function earned(U){if(!U)return 0;if(legDone(U))return 2;return U.lv.k.c[1]||U.st==='p'?1:0;}
 // Stiftmarke einer Stufe: 0 offen, 1 angefangen, 2 geschafft, 3 per Einstufung gezeigt
 function levelMark(U,i){
   if(!U)return 0; const lv=U.lv[LVS[i]];
@@ -714,10 +714,10 @@ function globalNext(){
 /* ---------- Kostüme ---------- */
 function wearOpts(){
   const o=[['none','Nothing']];
-  UNITS.forEach(u=>{const k=COSTUMES[u.id],e=earned(S.units[u.id]);if(k&&e>=1)o.push(e>=2?[u.id+'+',k.gold]:[u.id,k.name]);});   // ist Gold verdient, steht nur die goldene Fassung zur Wahl
+  UNITS.forEach(u=>{const k=COSTUMES[u.id],e=earned(S.units[u.id]);if(k&&e>=1)o.push(e>=2?[u.id+'+',k.leg]:[u.id,k.name]);});   // ist legendär verdient, steht nur die legendäre Fassung zur Wahl
   return o;
 }
-function wearNow(){const o=wearOpts();if(o.some(x=>x[0]===S.wear))return S.wear;return o.some(x=>x[0]===S.wear+'+')?S.wear+'+':'none';}   // getragen und inzwischen Gold verdient: Gold
+function wearNow(){const o=wearOpts(),has=w=>o.some(x=>x[0]===w);if(has(S.wear))return S.wear;if(has(S.wear+'+'))return S.wear+'+';const n=S.wear.replace(/\+$/,'');return has(n)?n:'none';}   // getragen und inzwischen legendär verdient: legendär. Gold aus der Zeit vor dem 23. Oktober 2026 („pr+“) ohne Challenge: das normale Kostüm
 
 /* ---------- Durchlauf starten ---------- */
 function start(kind,uid,L,n,preview){
@@ -1064,8 +1064,8 @@ function runHTML(){
 }
 function wonHTML(){
   if(!run.won||!COSTUMES[run.uid])return '';
-  const k=COSTUMES[run.uid], gold=run.won===2;
-  return '<div class="won"><div>'+doggo(run.uid+(gold?'+':''))+'</div><div><b>New costume: '+esc(gold?k.gold:k.name)+'</b><p>'+esc(gold?'The same costume in gold, because you finished Advanced as well.':k.say)+'</p><span class="mute" style="font-size:14px">Change it on the start page.</span></div></div>';
+  const k=COSTUMES[run.uid], leg=run.won===2;
+  return '<div class="won"><div>'+doggo(run.uid+(leg?'+':''))+'</div><div><b>New costume: '+esc(leg?k.leg:k.name)+'</b><p>'+esc(leg?'The legendary version, because you passed the Legendary challenge.':k.say)+'</p><span class="mute" style="font-size:14px">Change it on the start page.</span></div></div>';
 }
 function corrHTML(){
   const wrong=run.res.filter(r=>!r.ok||r.pts<1); if(!wrong.length)return '';
